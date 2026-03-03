@@ -1,81 +1,79 @@
-import { getAllProducts, urlFor } from "@/lib/sanity";
-import Image from "next/image";
-import AddToCartButton from "@/components/AddToCartButton";
+import Link from "next/link";
 
-export default async function Home() {
-  const products = await getAllProducts();
+const styles = [
+  { label: "Kundan", slug: "kundan" },
+  { label: "Meenakari", slug: "meenakari" },
+  { label: "Oxidized", slug: "oxidized" },
+  { label: "Polki", slug: "polki" },
+  { label: "American Diamond", slug: "american-diamond" },
+  { label: "Rajputi", slug: "rajputi" },
+];
 
+const occasions = [
+  { label: "Bridal & Wedding", slug: "bridal" },
+  { label: "Festive", slug: "festive" },
+  { label: "Party Wear", slug: "party-wear" },
+  { label: "Daily Wear", slug: "daily-wear" },
+];
+
+export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-purple-50 to-amber-50">
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">
-          <h1 className="text-4xl font-black bg-gradient-to-r from-red-500 via-yellow-500 to-purple-600 bg-clip-text text-transparent mb-4">
-            फीचर्ड प्रोडक्ट्स
-          </h1>
-          <p className="text-lg font-medium text-pink-600">
-            तू अब निकल, चल बदल, रोज़ नया रूप धर, बन सँवर, कर गुज़र नित नई
-            अठखेली... कि जान ले अब हर कोई, तू है कोई अलबेली
-          </p>
+    <main className="max-w-7xl mx-auto px-4 py-10 space-y-16">
+
+      {/* Hero */}
+      <section className="bg-amber-50 border border-amber-200 rounded-xl h-80 flex flex-col items-center justify-center text-center gap-4">
+        <h1 className="font-serif text-4xl text-stone-900">Jaipur's Finest Fashion Jewellery</h1>
+        <p className="text-stone-500 text-sm">Kundan · Meenakari · Oxidized · Polki</p>
+        <Link href="/collections/new-arrivals" className="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-colors">
+          Shop New Arrivals
+        </Link>
+      </section>
+
+      {/* Shop by Style */}
+      <section>
+        <h2 className="font-serif text-2xl text-stone-900 mb-6">Shop by Style</h2>
+        <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+          {styles.map(({ label, slug }) => (
+            <Link key={slug} href={`/collections/${slug}`}
+              className="bg-amber-50 border border-amber-200 rounded-lg py-4 text-center text-sm font-medium text-stone-700 hover:border-amber-400 hover:text-amber-600 transition-colors">
+              {label}
+            </Link>
+          ))}
         </div>
       </section>
 
-      {/* Products Grid */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        {products.length === 0 ? (
-          <div className="text-center text-gray-500">No products available</div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product) => (
-              <div
-                key={product._id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-              >
-                {/* Product Image */}
-                <div className="relative w-full h-64 bg-gray-200">
-                  {product.image?.asset?.url ? (
-                    <Image
-                      src={urlFor(product.image).width(400).url()}
-                      alt={product.image?.alt || product.name}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                      No image
-                    </div>
-                  )}
-                </div>
-
-                {/* Product Details */}
-                <div className="p-4">
-                  <h3 className="text-lg font-bold text-gray-800 mb-2">
-                    {product.name}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                    {product.description}
-                  </p>
-
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-2xl font-bold text-pink-600">
-                      ₹{product.price}
-                    </span>
-                    <span
-                      className={`text-sm font-semibold ${product.stock > 0 ? "text-green-600" : "text-red-600"}`}
-                    >
-                      {product.stock > 0
-                        ? `${product.stock} in stock`
-                        : "Out of stock"}
-                    </span>
-                  </div>
-
-                  <AddToCartButton product={product} />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+      {/* New Arrivals — Turso से आएगा */}
+      <section>
+        <h2 className="font-serif text-2xl text-stone-900 mb-2">New Arrivals</h2>
+        <p className="text-stone-400 text-sm">Products will load from Turso</p>
       </section>
-    </div>
+
+      {/* Shop by Occasion */}
+      <section>
+        <h2 className="font-serif text-2xl text-stone-900 mb-6">Shop by Occasion</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {occasions.map(({ label, slug }) => (
+            <Link key={slug} href={`/collections/${slug}`}
+              className="bg-amber-50 border border-amber-200 rounded-xl py-8 text-center text-sm font-semibold text-stone-700 hover:border-amber-400 hover:text-amber-600 transition-colors">
+              {label}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Best Sellers — Turso से आएगा */}
+      <section>
+        <h2 className="font-serif text-2xl text-stone-900 mb-2">Best Sellers</h2>
+        <p className="text-stone-400 text-sm">Products will load from Turso</p>
+      </section>
+
+      {/* Trust Bar */}
+      <section className="border-t border-amber-200 pt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm text-stone-600">
+        {["Free Shipping above ₹499", "Easy Returns", "Cash on Delivery", "Jaipur Craft"].map(t => (
+          <div key={t} className="font-medium">{t}</div>
+        ))}
+      </section>
+
+    </main>
   );
 }

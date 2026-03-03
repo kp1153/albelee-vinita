@@ -1,31 +1,23 @@
 {
-  "name": "albelee",
+  "name": "albelee-vinita",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write"
+    "lint": "eslint"
   },
   "dependencies": {
-    "@sanity/image-url": "^1.2.0",
-    "@sanity/vision": "^4.10.2",
-    "cloudinary": "^2.7.0",
-    "lucide-react": "^0.544.0",
-    "next": "15.5.4",
-    "next-cloudinary": "^6.16.0",
-    "next-sanity": "^11.4.2",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "sanity": "^4.10.2",
-    "sanity-plugin-cloudinary": "^1.4.0",
-    "styled-components": "^6.1.19"
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
     "@tailwindcss/postcss": "^4",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
     "tailwindcss": "^4"
   }
 }
