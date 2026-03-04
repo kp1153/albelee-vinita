@@ -1,44 +1,31 @@
-// components/Footer.jsx
 import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-8 border-t-4 border-yellow-500">
-      <div className="container mx-auto px-6">
-        {/* पॉलिसी लिंक्स */}
+    <footer className="bg-stone-900 text-white py-8 border-t-4 border-amber-500">
+      <div className="max-w-7xl mx-auto px-6">
+
         <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-6">
-          <Link
-            href="/shipping-policy"
-            className="text-gray-300 hover:text-yellow-400 transition duration-150 text-sm md:text-base"
-          >
-            शिपिंग पॉलिसी
+          <Link href="/shipping-policy" className="text-stone-300 hover:text-amber-400 transition text-sm">
+            Shipping Policy
           </Link>
-          <span className="hidden md:block text-gray-600">|</span>
-          <Link
-            href="/return-policy"
-            className="text-gray-300 hover:text-yellow-400 transition duration-150 text-sm md:text-base"
-          >
-            रिटर्न और एक्सचेंज
+          <span className="hidden md:block text-stone-600">|</span>
+          <Link href="/return-policy" className="text-stone-300 hover:text-amber-400 transition text-sm">
+            Returns & Exchange
           </Link>
         </div>
 
-        {/* कॉपीराइट और डेवलपर क्रेडिट */}
-        <div className="border-t border-gray-700 pt-4 text-center text-xs md:text-sm text-gray-400">
-          <p className="mb-2">
-            &copy; {new Date().getFullYear()} अलबेली। सभी अधिकार सुरक्षित।
-          </p>
-          <p className="text-xs">
+        <div className="border-t border-stone-700 pt-4 text-center text-xs text-stone-400">
+          <p className="mb-2">&copy; {new Date().getFullYear()} Albelee Jewels. All rights reserved.</p>
+          <p>
             Developed by{" "}
-            <a
-              href="https://www.web-developer-kp.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-pink-400 hover:text-pink-300 transition duration-150 font-medium underline"
-            >
+            <a href="https://www.web-developer-kp.com" target="_blank" rel="noopener noreferrer"
+              className="text-pink-400 hover:text-pink-300 transition font-medium underline">
               web-developer-kp.com
             </a>
           </p>
         </div>
+
       </div>
     </footer>
   );
