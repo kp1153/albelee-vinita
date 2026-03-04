@@ -3,19 +3,9 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const shopMenu = [
-  {
-    label: "Earrings",
-    slug: "earrings",
-    sub: [
-      { label: "Office Wear", slug: "earrings-office-wear" },
-      { label: "Bigger", slug: "earrings-bigger" },
-    ],
-  },
-  { label: "Gold Tone", slug: "gold-tone" },
-  { label: "Silver Tone", slug: "silver-tone" },
-  { label: "Bracelets", slug: "bracelets" },
-  { label: "Anti Tarnish", slug: "anti-tarnish" },
+const earringsMenu = [
+  { label: "Smaller", slug: "earrings-smaller" },
+  { label: "Bigger", slug: "earrings-bigger" },
 ];
 
 export default function Navbar() {
@@ -53,6 +43,7 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <ul className="hidden md:flex items-center gap-1">
 
+          {/* Home */}
           <li>
             <Link href="/"
               className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
@@ -61,48 +52,68 @@ export default function Navbar() {
             </Link>
           </li>
 
-          <li className="relative" onMouseEnter={() => open("shop")} onMouseLeave={close}>
+          {/* Earrings with submenu */}
+          <li className="relative" onMouseEnter={() => open("earrings")} onMouseLeave={close}>
             <button className={`flex items-center gap-1 px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
-              ${activeMenu === "shop" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
-              Shop by Category
-              <span className={`text-[8px] transition-transform duration-200 ${activeMenu === "shop" ? "rotate-180" : ""}`}>▾</span>
+              ${activeMenu === "earrings" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
+              Earrings
+              <span className={`text-[8px] transition-transform duration-200 ${activeMenu === "earrings" ? "rotate-180" : ""}`}>▾</span>
             </button>
 
-            {activeMenu === "shop" && (
+            {activeMenu === "earrings" && (
               <div
-                onMouseEnter={() => open("shop")}
+                onMouseEnter={() => open("earrings")}
                 onMouseLeave={close}
-                className="absolute top-full left-0 mt-2 bg-white border border-amber-200 rounded-lg shadow-xl p-4 z-50 min-w-[200px]"
+                className="absolute top-full left-0 mt-2 bg-white border border-amber-200 rounded-lg shadow-xl p-4 z-50 min-w-[150px]"
               >
                 <ul className="space-y-1">
-                  {shopMenu.map(({ label, slug, sub }) => (
+                  {earringsMenu.map(({ label, slug }) => (
                     <li key={slug}>
-                      <Link
-                        href={`/collections/${slug}`}
-                        className={`text-sm text-stone-700 hover:text-amber-600 hover:pl-1 transition-all block py-1
-                          ${label === "Bracelets" ? "font-bold text-base" : ""}`}
-                      >
+                      <Link href={`/collections/${slug}`}
+                        className="text-sm text-stone-700 hover:text-amber-600 hover:pl-1 transition-all block py-1">
                         {label}
                       </Link>
-                      {sub && (
-                        <ul className="ml-3 space-y-0.5 border-l border-amber-100 pl-2">
-                          {sub.map((s) => (
-                            <li key={s.slug}>
-                              <Link
-                                href={`/collections/${s.slug}`}
-                                className="text-xs text-stone-500 hover:text-amber-600 hover:pl-1 transition-all block py-0.5"
-                              >
-                                {s.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
+          </li>
+
+          {/* Gold Tone */}
+          <li>
+            <Link href="/collections/gold-tone"
+              className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
+              ${pathname === "/collections/gold-tone" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
+              Gold Tone
+            </Link>
+          </li>
+
+          {/* Silver Tone */}
+          <li>
+            <Link href="/collections/silver-tone"
+              className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
+              ${pathname === "/collections/silver-tone" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
+              Silver Tone
+            </Link>
+          </li>
+
+          {/* Bracelets */}
+          <li>
+            <Link href="/collections/bracelets"
+              className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
+              ${pathname === "/collections/bracelets" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
+              Bracelets
+            </Link>
+          </li>
+
+          {/* Anti Tarnish */}
+          <li>
+            <Link href="/collections/anti-tarnish"
+              className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
+              ${pathname === "/collections/anti-tarnish" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
+              Anti Tarnish
+            </Link>
           </li>
 
         </ul>
@@ -132,35 +143,21 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-amber-200 px-4 pb-6 pt-2 space-y-4">
-          <Link href="/" className="text-sm font-semibold text-stone-700 block py-1.5">Home</Link>
+        <div className="md:hidden bg-white border-t border-amber-200 px-4 pb-6 pt-2 space-y-2">
+          <Link href="/" className="text-sm font-semibold text-stone-700 block py-1.5 border-b border-amber-50">Home</Link>
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-widest text-amber-500 mb-2">Shop by Category</h4>
-            <ul className="space-y-1">
-              {shopMenu.map(({ label, slug, sub }) => (
-                <li key={slug}>
-                  <Link
-                    href={`/collections/${slug}`}
-                    className={`text-sm text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600
-                      ${label === "Bracelets" ? "font-bold text-base" : ""}`}
-                  >
-                    {label}
-                  </Link>
-                  {sub && (
-                    <ul className="ml-4 space-y-0.5">
-                      {sub.map((s) => (
-                        <li key={s.slug}>
-                          <Link href={`/collections/${s.slug}`} className="text-xs text-stone-500 block py-1 hover:text-amber-600">
-                            {s.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <p className="text-xs font-bold uppercase tracking-widest text-amber-500 py-1.5">Earrings</p>
+            {earringsMenu.map(({ label, slug }) => (
+              <Link key={slug} href={`/collections/${slug}`}
+                className="text-sm text-stone-700 block py-1.5 pl-3 border-b border-amber-50 hover:text-amber-600">
+                {label}
+              </Link>
+            ))}
           </div>
+          <Link href="/collections/gold-tone" className="text-sm font-semibold text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600">Gold Tone</Link>
+          <Link href="/collections/silver-tone" className="text-sm font-semibold text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600">Silver Tone</Link>
+          <Link href="/collections/bracelets" className="text-sm font-semibold text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600">Bracelets</Link>
+          <Link href="/collections/anti-tarnish" className="text-sm font-semibold text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600">Anti Tarnish</Link>
         </div>
       )}
     </nav>
