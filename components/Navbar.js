@@ -3,35 +3,19 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const shopMenu = {
-  "By Type": [
-    { label: "Necklace Sets", slug: "necklace-sets" },
-    { label: "Earrings & Jhumkas", slug: "earrings" },
-    { label: "Bangles & Kadas", slug: "bangles" },
-    { label: "Maang Tikka", slug: "maang-tikka" },
-    { label: "Rings", slug: "rings" },
-    { label: "Anklets", slug: "anklets" },
-    { label: "Mangalsutra", slug: "mangalsutra" },
-    { label: "Bracelets", slug: "bracelets" },
-  ],
-  "By Style": [
-    { label: "Kundan", slug: "kundan" },
-    { label: "Meenakari", slug: "meenakari" },
-    { label: "Oxidized", slug: "oxidized" },
-    { label: "Polki", slug: "polki" },
-    { label: "American Diamond", slug: "american-diamond" },
-    { label: "Lac", slug: "lac" },
-    { label: "Rajputi", slug: "rajputi" },
-    { label: "Victorian", slug: "victorian" },
-  ],
-};
-
-const occasionsMenu = [
-  { label: "Bridal & Wedding", slug: "bridal" },
-  { label: "Festive", slug: "festive" },
-  { label: "Party Wear", slug: "party-wear" },
-  { label: "Daily Wear", slug: "daily-wear" },
-  { label: "Office Wear", slug: "office-wear" },
+const shopMenu = [
+  {
+    label: "Earrings",
+    slug: "earrings",
+    sub: [
+      { label: "Office Wear", slug: "earrings-office-wear" },
+      { label: "Bigger", slug: "earrings-bigger" },
+    ],
+  },
+  { label: "Gold Tone", slug: "gold-tone" },
+  { label: "Silver Tone", slug: "silver-tone" },
+  { label: "Bracelets", slug: "bracelets" },
+  { label: "Anti Tarnish", slug: "anti-tarnish" },
 ];
 
 export default function Navbar() {
@@ -69,7 +53,6 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <ul className="hidden md:flex items-center gap-1">
 
-          {/* Home */}
           <li>
             <Link href="/"
               className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
@@ -78,11 +61,10 @@ export default function Navbar() {
             </Link>
           </li>
 
-          {/* Shop */}
           <li className="relative" onMouseEnter={() => open("shop")} onMouseLeave={close}>
             <button className={`flex items-center gap-1 px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
               ${activeMenu === "shop" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
-              Shop
+              Shop by Category
               <span className={`text-[8px] transition-transform duration-200 ${activeMenu === "shop" ? "rotate-180" : ""}`}>▾</span>
             </button>
 
@@ -90,50 +72,32 @@ export default function Navbar() {
               <div
                 onMouseEnter={() => open("shop")}
                 onMouseLeave={close}
-                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white border border-amber-200 rounded-lg shadow-xl p-6 z-50 flex gap-10 min-w-max"
+                className="absolute top-full left-0 mt-2 bg-white border border-amber-200 rounded-lg shadow-xl p-4 z-50 min-w-[200px]"
               >
-                {Object.entries(shopMenu).map(([colTitle, items]) => (
-                  <div key={colTitle}>
-                    <h4 className="text-[10px] uppercase tracking-[2px] text-amber-500 font-semibold mb-3 border-b border-amber-100 pb-1">
-                      {colTitle}
-                    </h4>
-                    <ul className="space-y-1.5">
-                      {items.map(({ label, slug }) => (
-                        <li key={slug}>
-                          <Link href={`/collections/${slug}`}
-                            className="text-sm text-stone-700 hover:text-amber-600 hover:pl-1 transition-all block">
-                            {label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            )}
-          </li>
-
-          {/* Occasions */}
-          <li className="relative" onMouseEnter={() => open("occasions")} onMouseLeave={close}>
-            <button className={`flex items-center gap-1 px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
-              ${activeMenu === "occasions" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
-              Occasions
-              <span className={`text-[8px] transition-transform duration-200 ${activeMenu === "occasions" ? "rotate-180" : ""}`}>▾</span>
-            </button>
-
-            {activeMenu === "occasions" && (
-              <div
-                onMouseEnter={() => open("occasions")}
-                onMouseLeave={close}
-                className="absolute top-full left-0 mt-2 bg-white border border-amber-200 rounded-lg shadow-xl p-4 z-50 min-w-max"
-              >
-                <ul className="space-y-1.5">
-                  {occasionsMenu.map(({ label, slug }) => (
+                <ul className="space-y-1">
+                  {shopMenu.map(({ label, slug, sub }) => (
                     <li key={slug}>
-                      <Link href={`/collections/${slug}`}
-                        className="text-sm text-stone-700 hover:text-amber-600 hover:pl-1 transition-all block">
+                      <Link
+                        href={`/collections/${slug}`}
+                        className={`text-sm text-stone-700 hover:text-amber-600 hover:pl-1 transition-all block py-1
+                          ${label === "Bracelets" ? "font-bold text-base" : ""}`}
+                      >
                         {label}
                       </Link>
+                      {sub && (
+                        <ul className="ml-3 space-y-0.5 border-l border-amber-100 pl-2">
+                          {sub.map((s) => (
+                            <li key={s.slug}>
+                              <Link
+                                href={`/collections/${s.slug}`}
+                                className="text-xs text-stone-500 hover:text-amber-600 hover:pl-1 transition-all block py-0.5"
+                              >
+                                {s.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -170,28 +134,29 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="md:hidden bg-white border-t border-amber-200 px-4 pb-6 pt-2 space-y-4">
           <Link href="/" className="text-sm font-semibold text-stone-700 block py-1.5">Home</Link>
-          {Object.entries(shopMenu).map(([colTitle, items]) => (
-            <div key={colTitle}>
-              <h4 className="text-xs font-bold uppercase tracking-widest text-amber-500 mb-2">{colTitle}</h4>
-              <ul className="space-y-1">
-                {items.map(({ label, slug }) => (
-                  <li key={slug}>
-                    <Link href={`/collections/${slug}`} className="text-sm text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600">
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-widest text-amber-500 mb-2">Occasions</h4>
+            <h4 className="text-xs font-bold uppercase tracking-widest text-amber-500 mb-2">Shop by Category</h4>
             <ul className="space-y-1">
-              {occasionsMenu.map(({ label, slug }) => (
+              {shopMenu.map(({ label, slug, sub }) => (
                 <li key={slug}>
-                  <Link href={`/collections/${slug}`} className="text-sm text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600">
+                  <Link
+                    href={`/collections/${slug}`}
+                    className={`text-sm text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600
+                      ${label === "Bracelets" ? "font-bold text-base" : ""}`}
+                  >
                     {label}
                   </Link>
+                  {sub && (
+                    <ul className="ml-4 space-y-0.5">
+                      {sub.map((s) => (
+                        <li key={s.slug}>
+                          <Link href={`/collections/${s.slug}`} className="text-xs text-stone-500 block py-1 hover:text-amber-600">
+                            {s.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>
