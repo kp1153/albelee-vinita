@@ -7,7 +7,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-6">
           <Link href="/shipping-policy" className="text-stone-300 hover:text-amber-400 transition text-sm">
-            Shipping Policy
+            Shippingg Policy
           </Link>
           <span className="hidden md:block text-stone-600">|</span>
           <Link href="/return-policy" className="text-stone-300 hover:text-amber-400 transition text-sm">
