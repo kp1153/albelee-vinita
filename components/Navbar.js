@@ -54,8 +54,8 @@ const Navbar = () => {
             <div className="flex items-center w-32">
               <Link href="/">
                 <Image
-                  src="/logo.JPEG"
-                  alt="Albelee Jewels"
+                  src="/logo.jpeg"
+                  alt="Albelee"
                   width={80}
                   height={50}
                   className="object-contain"
