@@ -1,165 +1,129 @@
-"use client";
-import { useState, useRef, useEffect } from "react";
+﻿'use client';
+import { useState, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useCart } from '@/context/CartContext';
+import Image from 'next/image';
+import { FaSearch, FaShoppingCart, FaUser, FaHeart } from 'react-icons/fa';
 
 const earringsMenu = [
-  { label: "Smaller", slug: "earrings-smaller" },
-  { label: "Bigger", slug: "earrings-bigger" },
+  { name: 'Smaller', href: '/collections/earrings-smaller' },
+  { name: 'Bigger', href: '/collections/earrings-bigger' },
 ];
 
-export default function Navbar() {
-  const [activeMenu, setActiveMenu] = useState(null);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
-  const timeoutRef = useRef(null);
+const navItems = [
+  { name: 'Home', href: '/' },
+  { name: 'Earrings', href: '/collections/earrings', children: earringsMenu },
+  { name: 'Gold Tone', href: '/collections/gold-tone' },
+  { name: 'Silver Tone', href: '/collections/silver-tone' },
+  { name: 'Bracelets', href: '/collections/bracelets' },
+  { name: 'Anti Tarnish', href: '/collections/anti-tarnish' },
+];
 
-  const open = (menu) => { clearTimeout(timeoutRef.current); setActiveMenu(menu); };
-  const close = () => { timeoutRef.current = setTimeout(() => setActiveMenu(null), 150); };
-  useEffect(() => () => clearTimeout(timeoutRef.current), []);
-  useEffect(() => { setMobileOpen(false); setActiveMenu(null); }, [pathname]);
+const Navbar = () => {
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const { totalItems } = useCart();
+  const buttonRefs = useRef({});
+
+  const isActive = (href) => pathname === href || pathname.startsWith(href + '/');
+
+  const handleDropdownClick = (index) => {
+    setActiveDropdown(activeDropdown === index ? null : index);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setShowSearch(false);
+      setSearchQuery('');
+    }
+  };
 
   return (
-    <nav className="sticky top-0 z-50 bg-amber-50 border-b border-amber-300 shadow-sm">
-
-      {/* Top Strip */}
-      <div className="bg-stone-900 text-amber-300 text-xs text-center py-1.5 tracking-widest">
-        Free Shipping &nbsp;|&nbsp; COD Available &nbsp;|&nbsp;
-        <Link href="/track-order" className="underline hover:text-white transition-colors ml-1">
-          Track Your Order
-        </Link>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-
-        {/* Logo */}
-        <Link href="/" className="flex flex-col leading-none">
-          <span className="font-serif text-2xl font-bold text-stone-900">
-            Albelee <span className="text-amber-500 italic">Jewels</span>
-          </span>
-          <span className="text-[9px] tracking-[4px] text-amber-500 uppercase">Jaipur · Est. 2024</span>
-        </Link>
-
-        {/* Desktop Nav */}
-        <ul className="hidden md:flex items-center gap-1">
-
-          {/* Home */}
-          <li>
-            <Link href="/"
-              className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
-              ${pathname === "/" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
-              Home
-            </Link>
-          </li>
-
-          {/* Earrings with submenu */}
-          <li className="relative" onMouseEnter={() => open("earrings")} onMouseLeave={close}>
-            <button className={`flex items-center gap-1 px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
-              ${activeMenu === "earrings" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
-              Earrings
-              <span className={`text-[8px] transition-transform duration-200 ${activeMenu === "earrings" ? "rotate-180" : ""}`}>▾</span>
-            </button>
-
-            {activeMenu === "earrings" && (
-              <div
-                onMouseEnter={() => open("earrings")}
-                onMouseLeave={close}
-                className="absolute top-full left-0 mt-2 bg-white border border-amber-200 rounded-lg shadow-xl p-4 z-50 min-w-[150px]"
-              >
-                <ul className="space-y-1">
-                  {earringsMenu.map(({ label, slug }) => (
-                    <li key={slug}>
-                      <Link href={`/collections/${slug}`}
-                        className="text-sm text-stone-700 hover:text-amber-600 hover:pl-1 transition-all block py-1">
-                        {label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </li>
-
-          {/* Gold Tone */}
-          <li>
-            <Link href="/collections/gold-tone"
-              className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
-              ${pathname === "/collections/gold-tone" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
-              Gold Tone
-            </Link>
-          </li>
-
-          {/* Silver Tone */}
-          <li>
-            <Link href="/collections/silver-tone"
-              className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
-              ${pathname === "/collections/silver-tone" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
-              Silver Tone
-            </Link>
-          </li>
-
-          {/* Bracelets */}
-          <li>
-            <Link href="/collections/bracelets"
-              className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
-              ${pathname === "/collections/bracelets" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
-              Bracelets
-            </Link>
-          </li>
-
-          {/* Anti Tarnish */}
-          <li>
-            <Link href="/collections/anti-tarnish"
-              className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded transition-colors
-              ${pathname === "/collections/anti-tarnish" ? "text-amber-600 bg-amber-100" : "text-stone-700 hover:text-amber-600 hover:bg-amber-100"}`}>
-              Anti Tarnish
-            </Link>
-          </li>
-
-        </ul>
-
-        {/* Right Icons */}
-        <div className="flex items-center gap-1">
-          <div className="hidden md:flex items-center bg-amber-100 border border-amber-300 rounded-full px-3 py-1.5 gap-2 focus-within:border-amber-500 transition-colors">
-            <span className="text-sm">🔍</span>
-            <input className="bg-transparent text-sm text-stone-700 outline-none w-28 placeholder:text-amber-400" placeholder="Search..." />
-          </div>
-          <button className="relative p-2 rounded-full hover:bg-amber-100 transition-colors text-lg">
-            ♡
-            <span className="absolute top-0.5 right-0.5 bg-red-700 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
-          </button>
-          <button className="p-2 rounded-full hover:bg-amber-100 transition-colors text-lg">👤</button>
-          <button className="relative p-2 rounded-full hover:bg-amber-100 transition-colors text-lg">
-            🛍️
-            <span className="absolute top-0.5 right-0.5 bg-red-700 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
-          </button>
-          <button className="md:hidden flex flex-col gap-1.5 p-2" onClick={() => setMobileOpen(!mobileOpen)}>
-            <span className={`block w-5 h-0.5 bg-stone-800 transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-2" : ""}`} />
-            <span className={`block w-5 h-0.5 bg-stone-800 transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`} />
-            <span className={`block w-5 h-0.5 bg-stone-800 transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-amber-200 px-4 pb-6 pt-2 space-y-2">
-          <Link href="/" className="text-sm font-semibold text-stone-700 block py-1.5 border-b border-amber-50">Home</Link>
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-amber-500 py-1.5">Earrings</p>
-            {earringsMenu.map(({ label, slug }) => (
-              <Link key={slug} href={`/collections/${slug}`}
-                className="text-sm text-stone-700 block py-1.5 pl-3 border-b border-amber-50 hover:text-amber-600">
-                {label}
+    <>
+      <nav className="bg-[#F6EEF1] border-b-2 border-amber-300 shadow-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="relative flex items-center justify-between py-5 gap-4">
+            <div className="flex items-center w-32">
+              <Link href="/">
+                <Image src="/logo.JPEG" alt="Albelee Jewels" width={80} height={50} className="object-contain" priority />
               </Link>
-            ))}
+            </div>
+            <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+              <span className="font-serif text-3xl font-bold text-stone-900 tracking-widest">ALBELEE</span>
+            </Link>
+            <div className="flex items-center gap-3">
+              <Link href="/wishlist" className="text-stone-800 hover:text-amber-600 transition-colors p-2">
+                <FaHeart className="text-xl" />
+              </Link>
+              <Link href="/tracking" className="text-stone-800 hover:text-amber-600 transition-colors text-sm font-medium">Tracking</Link>
+              <button onClick={() => setShowSearch(!showSearch)} className="text-stone-800 hover:text-amber-600 transition-colors p-2" aria-label="Search">
+                <FaSearch className="text-xl" />
+              </button>
+              <Link href="/cart" className="relative group">
+                <div className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-4 py-2.5 rounded-lg transition-all shadow-lg flex items-center gap-2">
+                  <FaShoppingCart className="text-xl" />
+                  {totalItems > 0 && (
+                    <span className="bg-white text-amber-600 text-sm font-bold px-2 py-0.5 rounded-full">{totalItems}</span>
+                  )}
+                </div>
+              </Link>
+              <Link href="/admin/login" className="text-stone-800 hover:text-amber-600 transition-colors p-2">
+                <FaUser className="text-xl" />
+              </Link>
+            </div>
           </div>
-          <Link href="/collections/gold-tone" className="text-sm font-semibold text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600">Gold Tone</Link>
-          <Link href="/collections/silver-tone" className="text-sm font-semibold text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600">Silver Tone</Link>
-          <Link href="/collections/bracelets" className="text-sm font-semibold text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600">Bracelets</Link>
-          <Link href="/collections/anti-tarnish" className="text-sm font-semibold text-stone-700 block py-1.5 border-b border-amber-50 hover:text-amber-600">Anti Tarnish</Link>
+          {showSearch && (
+            <div className="pb-3">
+              <form onSubmit={handleSearch} className="relative">
+                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search jewellery..." className="w-full px-4 py-2 pr-10 rounded-lg bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 border border-amber-200" autoFocus />
+                <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 text-amber-500"><FaSearch /></button>
+              </form>
+            </div>
+          )}
+          <div className="pb-2">
+            <div className="flex items-center justify-between w-full">
+              {navItems.map((item, index) => (
+                <div key={item.name} className="relative">
+                  {!item.children ? (
+                    <Link href={item.href} className={`block px-3 py-2 text-stone-900 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors whitespace-nowrap text-sm font-semibold uppercase tracking-wide ${isActive(item.href) ? "text-amber-600 bg-amber-50" : ""}`}>
+                      {item.name}
+                    </Link>
+                  ) : (
+                    <button ref={(el) => (buttonRefs.current[index] = el)} onClick={() => handleDropdownClick(index)} className={`px-3 py-2 text-stone-900 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors whitespace-nowrap text-sm font-semibold uppercase tracking-wide flex items-center gap-1 ${isActive(item.href) ? "text-amber-600 bg-amber-50" : ""}`}>
+                      {item.name}
+                      <span className="text-xs">{activeDropdown === index ? '▲' : '▼'}</span>
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
+      </nav>
+      {activeDropdown !== null && navItems[activeDropdown]?.children && (
+        <>
+          <div className="fixed inset-0 z-[90]" onClick={() => setActiveDropdown(null)} />
+          <div className="fixed left-0 right-0 bg-white border-t border-amber-200 shadow-lg py-4 z-[100]">
+            <div className="max-w-7xl mx-auto px-4">
+              <div className="flex gap-2">
+                {navItems[activeDropdown].children.map((child) => (
+                  <Link key={child.name} href={child.href} onClick={() => setActiveDropdown(null)} className="px-4 py-2 text-sm text-stone-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors">
+                    {child.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
       )}
-    </nav>
+    </>
   );
-}
+};
+
+export default Navbar;
