@@ -1,79 +1,104 @@
+import Image from "next/image";
 import Link from "next/link";
 
-const styles = [
-  { label: "Kundan", slug: "kundan" },
-  { label: "Meenakari", slug: "meenakari" },
-  { label: "Oxidized", slug: "oxidized" },
-  { label: "Polki", slug: "polki" },
-  { label: "American Diamond", slug: "american-diamond" },
-  { label: "Rajputi", slug: "rajputi" },
-];
+async function getCategories() {
+  try {
+    const { default: client } = await import("@/lib/db");
+    const result = await client.execute(
+      `SELECT * FROM categories ORDER BY name`,
+    );
+    return result.rows;
+  } catch {
+    return [];
+  }
+}
 
-const occasions = [
-  { label: "Bridal & Wedding", slug: "bridal" },
-  { label: "Festive", slug: "festive" },
-  { label: "Party Wear", slug: "party-wear" },
-  { label: "Daily Wear", slug: "daily-wear" },
-];
+export default async function Home() {
+  const categories = await getCategories();
 
-export default function Home() {
   return (
-    <main className="max-w-7xl mx-auto px-4 py-10 space-y-16">
-
+    <main>
       {/* Hero */}
-      <section className="bg-amber-50 border border-amber-200 rounded-xl h-80 flex flex-col items-center justify-center text-center gap-4">
-        <h1 className="font-serif text-4xl text-stone-900">Jaipur's Finest Fashion Jewellery</h1>
-        <p className="text-stone-500 text-sm">Kundan · Meenakari · Oxidized · Polki</p>
-        <Link href="/collections/new-arrivals" className="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-colors">
-          Shop New Arrivals
-        </Link>
-      </section>
-
-      {/* Shop by Style */}
-      <section>
-        <h2 className="font-serif text-2xl text-stone-900 mb-6">Shop by Style</h2>
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-          {styles.map(({ label, slug }) => (
-            <Link key={slug} href={`/collections/${slug}`}
-              className="bg-amber-50 border border-amber-200 rounded-lg py-4 text-center text-sm font-medium text-stone-700 hover:border-amber-400 hover:text-amber-600 transition-colors">
-              {label}
-            </Link>
-          ))}
+      <section className="w-full h-[600px] flex">
+        <div className="w-1/2 bg-[#F6EEF1] flex flex-col justify-center px-16">
+          <h1 className="font-serif text-5xl text-stone-900 font-bold leading-tight mb-6">
+            A New Expression,
+            <br />
+            Every Day.
+          </h1>
+          <p className="font-serif text-base text-stone-600 leading-relaxed">
+            तू अब निकल, चल बदल, रोज़ नया रूप धर,
+            <br />
+            बन सँवर, कर गुज़र नित नई अठखेली...
+            <br />
+            कि जान ले अब हर कोई,
+            <br />
+            तू है कोई अलबेली
+          </p>
+        </div>
+        <div className="w-1/2 relative">
+          <Image
+            src="/hero.jpg"
+            alt="Albelee Jewels"
+            fill
+            className="object-cover object-center"
+            priority
+          />
         </div>
       </section>
 
-      {/* New Arrivals — Turso से आएगा */}
-      <section>
-        <h2 className="font-serif text-2xl text-stone-900 mb-2">New Arrivals</h2>
-        <p className="text-stone-400 text-sm">Products will load from Turso</p>
-      </section>
-
-      {/* Shop by Occasion */}
-      <section>
-        <h2 className="font-serif text-2xl text-stone-900 mb-6">Shop by Occasion</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {occasions.map(({ label, slug }) => (
-            <Link key={slug} href={`/collections/${slug}`}
-              className="bg-amber-50 border border-amber-200 rounded-xl py-8 text-center text-sm font-semibold text-stone-700 hover:border-amber-400 hover:text-amber-600 transition-colors">
-              {label}
+      {/* Shop By Category */}
+      <section className="max-w-7xl mx-auto px-4 py-16">
+        <h2 className="font-serif text-3xl text-stone-900 text-center mb-10">
+          Shop By Category
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/collections/${cat.slug}`}
+              className="bg-white border border-amber-100 rounded-xl overflow-hidden shadow hover:shadow-md transition group"
+            >
+              <div className="h-48 bg-amber-50 relative">
+                {cat.image_url ? (
+                  <Image
+                    src={cat.image_url}
+                    alt={cat.name}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-4xl">
+                    💎
+                  </div>
+                )}
+              </div>
+              <div className="p-4 text-center">
+                <p className="font-semibold text-stone-800 mb-2">{cat.name}</p>
+                <span className="bg-stone-900 text-white text-xs px-4 py-1.5 rounded-full group-hover:bg-amber-500 transition">
+                  View All
+                </span>
+              </div>
             </Link>
           ))}
         </div>
-      </section>
-
-      {/* Best Sellers — Turso से आएगा */}
-      <section>
-        <h2 className="font-serif text-2xl text-stone-900 mb-2">Best Sellers</h2>
-        <p className="text-stone-400 text-sm">Products will load from Turso</p>
       </section>
 
       {/* Trust Bar */}
-      <section className="border-t border-amber-200 pt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm text-stone-600">
-        {["Free Shipping above ₹499", "Easy Returns", "Cash on Delivery", "Jaipur Craft"].map(t => (
-          <div key={t} className="font-medium">{t}</div>
-        ))}
+      <section className="border-t border-amber-200 py-8 bg-amber-50">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm text-stone-600">
+          {[
+            "Free Shipping above ₹499",
+            "Easy Returns",
+            "Cash on Delivery",
+            "Handcrafted Jewellery",
+          ].map((t) => (
+            <div key={t} className="font-medium">
+              {t}
+            </div>
+          ))}
+        </div>
       </section>
-
     </main>
   );
 }
