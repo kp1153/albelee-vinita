@@ -1,5 +1,5 @@
 ﻿'use client';
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCart } from '@/context/CartContext';
@@ -21,6 +21,18 @@ const navItems = [
 ];
 
 const Navbar = () => {
+  const [showMenu, setShowMenu] = useState(true);
+const [lastScroll, setLastScroll] = useState(0);
+
+useEffect(() => {
+  const handleScroll = () => {
+    const current = window.scrollY;
+    setShowMenu(current < lastScroll || current < 50);
+    setLastScroll(current);
+  };
+  window.addEventListener('scroll', handleScroll);
+  return () => window.removeEventListener('scroll', handleScroll);
+}, [lastScroll]);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
@@ -56,8 +68,8 @@ const Navbar = () => {
                 <Image
                   src="/logo.jpeg"
                   alt="Albelee"
-                  width={80}
-                  height={50}
+                  width={120}
+                  height={75}
                   className="object-contain"
                   priority
                 />
@@ -118,7 +130,7 @@ const Navbar = () => {
             </div>
           )}
 
-          <div className="pb-2">
+        <div className={`pb-2 transition-all duration-300 overflow-hidden ${showMenu ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
             <div className="flex items-center justify-between w-full">
               {navItems.map((item, index) => (
                 <div key={item.name} className="relative">
