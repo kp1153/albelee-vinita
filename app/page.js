@@ -19,7 +19,7 @@ export default async function Home() {
 
       {/* Hero */}
       <section className="w-full h-[600px] flex">
-        <div className="w-1/2 flex flex-col justify-center px-16" style={{background: 'linear-gradient(135deg, #C4B5AD 0%, #B5A49C 50%, #C8B8B0 100%)'}}>
+        <div className="w-1/2 flex flex-col justify-center px-16" style={{background: '#b3958a'}}>
           <h1 className="font-serif text-5xl text-white font-bold leading-tight drop-shadow">
             A New Expression,<br />Every Day.
           </h1>
@@ -36,11 +36,11 @@ export default async function Home() {
       </section>
 
       {/* Poem */}
-      <section className="py-16 text-center" style={{background: 'linear-gradient(135deg, #C4B5AD 0%, #B5A49C 50%, #C8B8B0 100%)'}}>
+      <section className="py-16 text-center" style={{background: '#b3958a'}}>
         <div className="max-w-2xl mx-auto px-4">
           <p className="font-serif text-xl text-white leading-relaxed drop-shadow">
             तू अब निकल, चल बदल, रोज़ नया रूप धर,<br />
-            बन सँवर, कर गुज़र नित नई अठखेली...<br />
+            बन संवर, कर गुज़र नित नई अठखेली...<br />
             कि जान ले अब हर कोई,<br />
             तू है कोई अलबेली
           </p>
