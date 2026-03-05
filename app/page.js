@@ -26,7 +26,7 @@ export default async function Home() {
         </div>
         <div className="w-1/2 relative">
           <Image
-            src="/hero.jpg"
+            src="/hero.png"
             alt="Albelee Jewels"
             fill
             className="object-cover object-center"
