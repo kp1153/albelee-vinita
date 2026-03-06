@@ -13,13 +13,12 @@ export default function EditProduct() {
     fetch(`/api/admin/products/${id}`).then(r => r.json()).then(setForm);
   }, [id]);
 
-  const openMediaLibrary = () => {
+  const openMediaLibrary = async () => {
+    const res = await fetch('/api/admin/cloudinary-signature');
+    const { timestamp, signature, cloud_name, api_key } = await res.json();
+
     const ml = window.cloudinary.createMediaLibrary(
-      {
-        cloud_name: 'YOUR_CLOUD_NAME',
-        api_key: 'YOUR_API_KEY',
-        multiple: false,
-      },
+      { cloud_name, api_key, timestamp, signature, multiple: false },
       {
         insertHandler: (data) => {
           if (data?.assets?.[0]) {
@@ -63,11 +62,8 @@ export default function EditProduct() {
                 placeholder="URL या Browse से चुनो"
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
-              <button
-                type="button"
-                onClick={openMediaLibrary}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 whitespace-nowrap"
-              >
+              <button type="button" onClick={openMediaLibrary}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 whitespace-nowrap">
                 Browse
               </button>
             </div>
