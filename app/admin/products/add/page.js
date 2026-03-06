@@ -7,7 +7,7 @@ export default function AddProduct() {
   const router = useRouter();
   const [categories, setCategories] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const [form, setForm] = useState({ name: '', slug: '', description: '', price: '', mrp: '', category_id: '', stock: '', image_url: '' });
+  const [form, setForm] = useState({ name: '', slug: '', description: '', price: '', category_id: '', stock: '', image_url: '' });
 
   useEffect(() => {
     fetch('/api/admin/categories').then(r => r.json()).then(setCategories);
@@ -64,13 +64,17 @@ export default function AddProduct() {
           <RichTextEditor value={form.description} onChange={val => setForm(f => ({ ...f, description: val }))} />
         </div>
 
-        {[['price', 'Price'], ['mrp', 'MRP'], ['stock', 'Stock']].map(([key, label]) => (
-          <div key={key}>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-            <input value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
-          </div>
-        ))}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
+          <input value={form.price} onChange={e => setForm({ ...form, price: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+          <input value={form.stock} onChange={e => setForm({ ...form, stock: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>

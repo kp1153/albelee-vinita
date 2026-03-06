@@ -1,13 +1,14 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import RichTextEditor from '@/components/RichTextEditor';
 
 export default function EditProduct() {
   const router = useRouter();
   const { id } = useParams();
   const [categories, setCategories] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const [form, setForm] = useState({ name: '', slug: '', description: '', price: '', mrp: '', category_id: '', stock: '', image_url: '' });
+  const [form, setForm] = useState({ name: '', slug: '', description: '', price: '', category_id: '', stock: '', image_url: '' });
 
   useEffect(() => {
     fetch('/api/admin/categories').then(r => r.json()).then(setCategories);
@@ -39,13 +40,35 @@ export default function EditProduct() {
     <div className="min-h-screen bg-gray-100 p-8">
       <h1 className="text-2xl font-bold text-stone-800 mb-6">Edit Product</h1>
       <div className="bg-white rounded-xl shadow p-6 max-w-2xl space-y-4">
-        {[['name', 'Name'], ['slug', 'Slug'], ['description', 'Description'], ['price', 'Price'], ['mrp', 'MRP'], ['stock', 'Stock']].map(([key, label]) => (
-          <div key={key}>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-            <input value={form[key] || ''} onChange={e => setForm({ ...form, [key]: e.target.value })}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
-          </div>
-        ))}
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+          <input value={form.slug || ''} onChange={e => setForm({ ...form, slug: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <RichTextEditor value={form.description || ''} onChange={val => setForm(f => ({ ...f, description: val }))} />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
+          <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+          <input value={form.stock || ''} onChange={e => setForm({ ...form, stock: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
@@ -54,7 +77,7 @@ export default function EditProduct() {
           )}
           <input type="file" accept="image/*" onChange={handleImageUpload}
             className="w-full border border-gray-300 rounded-lg px-3 py-2" />
-          {uploading && <p className="text-sm text-amber-500 mt-1">अपलोड हो रहा है...</p>}
+          {uploading && <p className="text-sm text-amber-500 mt-1">Uploading...</p>}
         </div>
 
         <div>
@@ -65,6 +88,7 @@ export default function EditProduct() {
             {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
+
         <button onClick={handleSubmit} className="bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600">Update Product</button>
       </div>
     </div>
