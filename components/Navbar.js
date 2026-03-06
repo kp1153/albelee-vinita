@@ -54,7 +54,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={`bg-[#F6EEF1] border-b-2 border-amber-300 shadow-md fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${showNav ? 'translate-y-0' : '-translate-y-full'}`}>
+      <nav className={`bg-[#FFF3F6] border-b-2 border-[#F6C9D6] shadow-md fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${showNav ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="max-w-7xl mx-auto px-4">
 
           <div className="relative flex items-center justify-between py-5 gap-4">
@@ -63,26 +63,27 @@ const Navbar = () => {
                 <Image src="/logo.jpeg" alt="Albelee" width={120} height={75} className="object-contain" priority />
               </Link>
             </div>
-            <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+            <Link href="/" className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center">
               <span className="font-serif text-3xl font-bold text-stone-900 tracking-widest">ALBELEE</span>
+              <span className="text-xs text-stone-500 tracking-widest font-medium">अलबेली</span>
             </Link>
             <div className="flex items-center gap-3">
-              <Link href="/wishlist" className="text-stone-800 hover:text-amber-600 transition-colors p-2">
-                <FaHeart className="text-xl" />
+              <Link href="/wishlist" className="p-2 transition-colors">
+                <FaHeart className="text-xl text-[#D85A8C]" />
               </Link>
-              <Link href="/tracking" className="text-stone-800 hover:text-amber-600 transition-colors text-sm font-medium">Tracking</Link>
-              <button onClick={() => setShowSearch(!showSearch)} className="text-stone-800 hover:text-amber-600 transition-colors p-2" aria-label="Search">
+              <Link href="/tracking" className="text-stone-800 hover:text-[#EFA7BC] transition-colors text-sm font-medium">Tracking</Link>
+              <button onClick={() => setShowSearch(!showSearch)} className="text-stone-800 hover:text-[#EFA7BC] transition-colors p-2" aria-label="Search">
                 <FaSearch className="text-xl" />
               </button>
               <Link href="/cart" className="relative group">
-                <div className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-4 py-2.5 rounded-lg transition-all shadow-lg flex items-center gap-2">
+                <div className="bg-[#C9D7F2] hover:bg-[#b3c6ef] text-stone-800 px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2">
                   <FaShoppingCart className="text-xl" />
                   {totalItems > 0 && (
-                    <span className="bg-white text-amber-600 text-sm font-bold px-2 py-0.5 rounded-full">{totalItems}</span>
+                    <span className="bg-white text-stone-700 text-sm font-bold px-2 py-0.5 rounded-full">{totalItems}</span>
                   )}
                 </div>
               </Link>
-              <Link href="/admin/login" className="text-stone-800 hover:text-amber-600 transition-colors p-2">
+              <Link href="/admin/login" className="text-stone-800 hover:text-[#EFA7BC] transition-colors p-2">
                 <FaUser className="text-xl" />
               </Link>
             </div>
@@ -93,9 +94,9 @@ const Navbar = () => {
               <form onSubmit={handleSearch} className="relative">
                 <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search jewellery..."
-                  className="w-full px-4 py-2 pr-10 rounded-lg bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 border border-amber-200"
+                  className="w-full px-4 py-2 pr-10 rounded-lg bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F6C9D6] border border-[#F6C9D6]"
                   autoFocus />
-                <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 text-amber-500"><FaSearch /></button>
+                <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 text-[#D85A8C]"><FaSearch /></button>
               </form>
             </div>
           )}
@@ -106,12 +107,12 @@ const Navbar = () => {
                 <div key={item.name} className="relative">
                   {!item.children ? (
                     <Link href={item.href}
-                      className={`block px-3 py-2 text-stone-900 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors whitespace-nowrap text-sm font-semibold uppercase tracking-wide ${isActive(item.href) ? "text-amber-600 bg-amber-50" : ""}`}>
+                      className={`block px-3 py-2 text-stone-900 hover:text-stone-900 hover:bg-[#F6C9D6] rounded-lg transition-colors whitespace-nowrap text-sm font-semibold uppercase tracking-wide ${isActive(item.href) ? "text-stone-900 bg-[#F6C9D6]" : ""}`}>
                       {item.name}
                     </Link>
                   ) : (
                     <button ref={(el) => (buttonRefs.current[index] = el)} onClick={() => handleDropdownClick(index)}
-                      className={`px-3 py-2 text-stone-900 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors whitespace-nowrap text-sm font-semibold uppercase tracking-wide flex items-center gap-1 ${isActive(item.href) ? "text-amber-600 bg-amber-50" : ""}`}>
+                      className={`px-3 py-2 text-stone-900 hover:text-stone-900 hover:bg-[#F6C9D6] rounded-lg transition-colors whitespace-nowrap text-sm font-semibold uppercase tracking-wide flex items-center gap-1 ${isActive(item.href) ? "text-stone-900 bg-[#F6C9D6]" : ""}`}>
                       {item.name}
                       <span className="text-xs">{activeDropdown === index ? '▲' : '▼'}</span>
                     </button>
@@ -124,18 +125,17 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Navbar height compensate */}
       <div className="h-[120px]" />
 
       {activeDropdown !== null && navItems[activeDropdown]?.children && (
         <>
           <div className="fixed inset-0 z-[90]" onClick={() => setActiveDropdown(null)} />
-          <div className="fixed left-0 right-0 bg-white border-t border-amber-200 shadow-lg py-4 z-[100]">
+          <div className="fixed left-0 right-0 bg-white border-t border-[#F6C9D6] shadow-lg py-4 z-[100]">
             <div className="max-w-7xl mx-auto px-4">
               <div className="flex gap-2">
                 {navItems[activeDropdown].children.map((child) => (
                   <Link key={child.name} href={child.href} onClick={() => setActiveDropdown(null)}
-                    className="px-4 py-2 text-sm text-stone-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors">
+                    className="px-4 py-2 text-sm text-stone-700 hover:text-stone-900 hover:bg-[#F6C9D6] rounded-lg transition-colors">
                     {child.name}
                   </Link>
                 ))}
