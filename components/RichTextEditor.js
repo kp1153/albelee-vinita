@@ -1,7 +1,6 @@
 'use client';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Link from '@tiptap/extension-link';
 import Youtube from '@tiptap/extension-youtube';
 import { TextStyle } from '@tiptap/extension-text-style';
 import { Color } from '@tiptap/extension-color';
@@ -12,7 +11,6 @@ export default function RichTextEditor({ value, onChange }) {
       StarterKit,
       TextStyle,
       Color,
-      Link.configure({ openOnClick: false }),
       Youtube.configure({ controls: true }),
     ],
     content: value,
@@ -30,11 +28,6 @@ export default function RichTextEditor({ value, onChange }) {
       {label}
     </button>
   );
-
-  const addLink = () => {
-    const url = prompt('Enter URL');
-    if (url) editor.chain().focus().setLink({ href: url }).run();
-  };
 
   const addYoutube = () => {
     const url = prompt('Enter YouTube URL');
@@ -54,7 +47,6 @@ export default function RichTextEditor({ value, onChange }) {
         {btn(() => editor.chain().focus().toggleBulletList().run(), '• List', editor.isActive('bulletList'))}
         {btn(() => editor.chain().focus().toggleOrderedList().run(), '1. List', editor.isActive('orderedList'))}
         {btn(() => editor.chain().focus().toggleBlockquote().run(), '❝', editor.isActive('blockquote'))}
-        {btn(addLink, '🔗 Link', editor.isActive('link'))}
         {btn(addYoutube, '▶ YouTube', false)}
         <div className="flex gap-1 items-center ml-1">
           {colors.map(color => (
