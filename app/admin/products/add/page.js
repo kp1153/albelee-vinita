@@ -12,6 +12,14 @@ export default function AddProduct() {
     fetch('/api/admin/categories').then(r => r.json()).then(setCategories);
   }, []);
 
+  const generateSlug = (name) =>
+    name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+
+  const handleNameChange = (e) => {
+    const name = e.target.value;
+    setForm(f => ({ ...f, name, slug: generateSlug(name) }));
+  };
+
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -37,7 +45,20 @@ export default function AddProduct() {
     <div className="min-h-screen bg-gray-100 p-8">
       <h1 className="text-2xl font-bold text-stone-800 mb-6">Add Product</h1>
       <div className="bg-white rounded-xl shadow p-6 max-w-2xl space-y-4">
-        {[['name', 'Name'], ['slug', 'Slug'], ['description', 'Description'], ['price', 'Price'], ['mrp', 'MRP'], ['stock', 'Stock']].map(([key, label]) => (
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <input value={form.name} onChange={handleNameChange}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+          <input value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        </div>
+
+        {[['description', 'Description'], ['price', 'Price'], ['mrp', 'MRP'], ['stock', 'Stock']].map(([key, label]) => (
           <div key={key}>
             <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
             <input value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })}
@@ -63,6 +84,7 @@ export default function AddProduct() {
             {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
+
         <button onClick={handleSubmit} className="bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600">Save Product</button>
       </div>
     </div>
