@@ -1,6 +1,7 @@
 ﻿'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import RichTextEditor from '@/components/RichTextEditor';
 
 export default function AddProduct() {
   const router = useRouter();
@@ -58,7 +59,12 @@ export default function AddProduct() {
             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
         </div>
 
-        {[['description', 'Description'], ['price', 'Price'], ['mrp', 'MRP'], ['stock', 'Stock']].map(([key, label]) => (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <RichTextEditor value={form.description} onChange={val => setForm(f => ({ ...f, description: val }))} />
+        </div>
+
+        {[['price', 'Price'], ['mrp', 'MRP'], ['stock', 'Stock']].map(([key, label]) => (
           <div key={key}>
             <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
             <input value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })}
