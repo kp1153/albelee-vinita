@@ -15,10 +15,10 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    const { name, slug, description, price, category_id, stock, image_url } = await req.json();
+    const { name, slug, description, price, mrp, category_id, stock, image_url } = await req.json();
     const result = await client.execute({
-      sql: `INSERT INTO products (name, slug, description, price, category_id, stock) VALUES (?, ?, ?, ?, ?, ?)`,
-      args: [name, slug, description, price, category_id, stock],
+      sql: `INSERT INTO products (name, slug, description, price, mrp, category_id, stock) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      args: [name, slug, description, price, mrp || price, category_id, stock],
     });
     if (image_url) {
       await client.execute({
