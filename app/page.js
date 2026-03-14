@@ -1,20 +1,36 @@
-export const revalidate = 0;
 import Image from "next/image";
 import Link from "next/link";
 import client from "@/lib/db";
+
+export const revalidate = 0;
 
 async function getCategories() {
   try {
     const result = await client.execute(`SELECT * FROM categories ORDER BY name`);
     return result.rows;
-  } catch (e) {
-    console.error("DB error:", e);
+  } catch {
+    return [];
+  }
+}
+
+async function getLatestProducts() {
+  try {
+    const result = await client.execute(`
+      SELECT p.*, pi.image_url as image
+      FROM products p
+      LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.is_primary = 1
+      ORDER BY p.created_at DESC
+      LIMIT 8
+    `);
+    return result.rows;
+  } catch {
     return [];
   }
 }
 
 export default async function Home() {
   const categories = await getCategories();
+  const products = await getLatestProducts();
 
   return (
     <main>
@@ -26,13 +42,7 @@ export default async function Home() {
           </h1>
         </div>
         <div className="w-1/2 relative">
-          <Image
-            src="/hero.png"
-            alt="Albelee Jewels"
-            fill
-            className="object-cover object-center"
-            priority
-          />
+          <Image src="/hero.png" alt="Albelee Jewels" fill className="object-cover object-center" priority />
         </div>
       </section>
 
@@ -65,6 +75,28 @@ export default async function Home() {
                 <span className="bg-[#F6C9D6] text-stone-800 text-xs px-4 py-1.5 rounded-full group-hover:bg-[#EFA7BC] transition">
                   View All
                 </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 py-16">
+        <h2 className="font-serif text-3xl text-stone-900 text-center mb-10">New Arrivals</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {products.map((p) => (
+            <Link key={p.id} href={`/products/${p.slug}`}
+              className="bg-white border border-[#F6C9D6] rounded-xl overflow-hidden shadow hover:shadow-md transition group">
+              <div className="h-56 bg-[#FFF7F8] relative">
+                {p.image ? (
+                  <Image src={p.image} alt={p.name} fill className="object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-4xl">💎</div>
+                )}
+              </div>
+              <div className="p-4">
+                <p className="font-semibold text-stone-800 mb-1">{p.name}</p>
+                <p className="text-amber-600 font-bold">₹{p.price}</p>
               </div>
             </Link>
           ))}
