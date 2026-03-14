@@ -7,6 +7,7 @@ export default function AddProduct() {
   const router = useRouter();
   const [categories, setCategories] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ name: '', slug: '', description: '', price: '', category_id: '', stock: '', image_url: '' });
 
   useEffect(() => {
@@ -14,7 +15,7 @@ export default function AddProduct() {
   }, []);
 
   const generateSlug = (name) =>
-    name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+    name.trim().toLowerCase().replace(/[\s]+/g, '-').replace(/[^\w\u0900-\u097F-]/g, '').replace(/--+/g, '-');
 
   const handleNameChange = (e) => {
     const name = e.target.value;
@@ -28,18 +29,30 @@ export default function AddProduct() {
     const formData = new FormData();
     formData.append('file', file);
     const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
-    const { url } = await res.json();
-    setForm(f => ({ ...f, image_url: url }));
+    const data = await res.json();
+    if (data.url) {
+      setForm(f => ({ ...f, image_url: data.url }));
+    } else {
+      alert('Image upload failed: ' + JSON.stringify(data.error));
+    }
     setUploading(false);
   };
 
   const handleSubmit = async () => {
-    await fetch('/api/admin/products', {
+    if (uploading) { alert('Image still uploading, please wait...'); return; }
+    setSaving(true);
+    const res = await fetch('/api/admin/products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),
     });
-    router.push('/admin/products');
+    if (res.ok) {
+      router.push('/admin/products');
+    } else {
+      const err = await res.json();
+      alert('Error: ' + JSON.stringify(err));
+      setSaving(false);
+    }
   };
 
   return (
@@ -50,13 +63,13 @@ export default function AddProduct() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
           <input value={form.name} onChange={handleNameChange}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-400" />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
           <input value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-400" />
         </div>
 
         <div>
@@ -67,20 +80,20 @@ export default function AddProduct() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
           <input value={form.price} onChange={e => setForm({ ...form, price: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-400" />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
           <input value={form.stock} onChange={e => setForm({ ...form, stock: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-400" />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
           <input type="file" accept="image/*" onChange={handleImageUpload}
             className="w-full border border-gray-300 rounded-lg px-3 py-2" />
-          {uploading && <p className="text-sm text-amber-500 mt-1">Uploading...</p>}
+          {uploading && <p className="text-sm text-amber-500 mt-1">Uploading... please wait</p>}
           {form.image_url && !uploading && (
             <img src={form.image_url} alt="preview" className="mt-2 h-24 rounded-lg object-cover" />
           )}
@@ -89,13 +102,16 @@ export default function AddProduct() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
           <select value={form.category_id} onChange={e => setForm({ ...form, category_id: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400">
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-400">
             <option value="">Select category</option>
             {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
 
-        <button onClick={handleSubmit} className="bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600">Save Product</button>
+        <button onClick={handleSubmit} disabled={uploading || saving}
+          className="bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed">
+          {saving ? 'Saving...' : 'Save Product'}
+        </button>
       </div>
     </div>
   );
