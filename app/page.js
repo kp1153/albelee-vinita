@@ -1,12 +1,13 @@
- import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
+import client from "@/lib/db";
 
 async function getCategories() {
   try {
-    const { default: client } = await import('@/lib/db');
     const result = await client.execute(`SELECT * FROM categories ORDER BY name`);
     return result.rows;
-  } catch {
+  } catch (e) {
+    console.error("DB error:", e);
     return [];
   }
 }
@@ -17,7 +18,6 @@ export default async function Home() {
   return (
     <main>
 
-      {/* Hero */}
       <section className="w-full h-[600px] flex">
         <div className="w-1/2 flex flex-col justify-center px-16" style={{background: '#F5D1B5'}}>
           <h1 className="font-serif text-5xl text-stone-800 font-bold leading-tight drop-shadow">
@@ -35,7 +35,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Poem */}
       <section className="py-16 text-center" style={{background: '#F5D1B5'}}>
         <div className="max-w-2xl mx-auto px-4">
           <p className="font-serif text-xl text-stone-800 leading-relaxed drop-shadow">
@@ -47,7 +46,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Shop By Category */}
       <section className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="font-serif text-3xl text-stone-900 text-center mb-10">Shop By Category</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -72,7 +70,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Trust Bar */}
       <section className="border-t border-[#F6C9D6] py-8 bg-[#FFF7F8]">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm text-stone-600">
           {["Free Shipping above ₹499", "Easy Returns", "Cash on Delivery", "Handcrafted Jewellery"].map(t => (
