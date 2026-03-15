@@ -75,7 +75,6 @@ const Navbar = () => {
         className={`bg-[#FFF3F6] border-b-2 border-[#F6C9D6] shadow-md fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${showNav ? "translate-y-0" : "-translate-y-full"}`}
       >
         <div className="max-w-7xl mx-auto px-4">
-
           {/* ── MOBILE HEADER ── */}
           <div className="flex md:hidden items-center justify-between py-3">
             <div className="flex items-center gap-2">
@@ -119,6 +118,9 @@ const Navbar = () => {
                     {totalItems}
                   </span>
                 )}
+              </Link>
+              <Link href="/login" className="p-1">
+                <FaUser className="text-xl text-stone-800" />
               </Link>
             </div>
           </div>
@@ -234,7 +236,6 @@ const Navbar = () => {
               ))}
             </div>
           </div>
-
         </div>
       </nav>
 
@@ -295,7 +296,7 @@ const Navbar = () => {
                     <button
                       onClick={() =>
                         setMobileDropdown(
-                          mobileDropdown === index ? null : index
+                          mobileDropdown === index ? null : index,
                         )
                       }
                       className={`w-full flex items-center justify-between px-4 py-3 text-stone-900 rounded-xl text-base font-semibold uppercase tracking-wide transition-colors ${isActive(item.href) ? "bg-[#F6C9D6]" : "hover:bg-[#F6C9D6]"}`}
