@@ -102,7 +102,6 @@ const Navbar = () => {
               </span>
             </Link>
 
-            {/* desktop icons */}
             <div className="hidden md:flex items-center gap-3">
               <Link href="/wishlist" className="p-2 transition-colors">
                 <FaHeart className="text-xl text-[#D85A8C]" />
@@ -138,8 +137,10 @@ const Navbar = () => {
               </Link>
             </div>
 
-            {/* mobile icons */}
             <div className="flex md:hidden items-center gap-1">
+              <Link href="/wishlist" className="p-2 transition-colors">
+                <FaHeart className="text-xl text-[#D85A8C]" />
+              </Link>
               <Link href="/cart" className="relative group">
                 <div className="bg-[#C9D7F2] text-stone-800 px-3 py-2 rounded-lg shadow-md flex items-center gap-1">
                   <FaShoppingCart className="text-lg" />
