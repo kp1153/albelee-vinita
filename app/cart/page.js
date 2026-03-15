@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function CartPage() {
-  const { items, removeFromCart, totalItems } = useCart();
+  const { cartItems, removeFromCart, totalItems } = useCart();
 
   if (totalItems === 0) {
     return (
@@ -22,7 +22,7 @@ export default function CartPage() {
     <main className="max-w-3xl mx-auto px-4 py-16">
       <h1 className="font-serif text-3xl text-stone-900 mb-8">Your Cart</h1>
       <div className="space-y-4">
-        {items.map((item) => (
+        {cartItems.map((item) => (
           <div key={item.id} className="flex gap-4 bg-white border border-[#F6C9D6] rounded-xl p-4">
             <div className="w-20 h-20 relative rounded-lg overflow-hidden bg-[#FFF7F8]">
               {item.image ? (
@@ -39,6 +39,11 @@ export default function CartPage() {
             <button onClick={() => removeFromCart(item.id)} className="text-red-400 hover:text-red-600 text-sm">Remove</button>
           </div>
         ))}
+      </div>
+      <div className="mt-8 flex justify-end">
+        <Link href="/checkout" className="bg-[#F6C9D6] hover:bg-[#EFA7BC] text-stone-800 font-semibold px-8 py-3 rounded-xl transition">
+          Proceed to Checkout
+        </Link>
       </div>
     </main>
   );
