@@ -75,6 +75,7 @@ const Navbar = () => {
         className={`bg-[#FFF3F6] border-b-2 border-[#F6C9D6] shadow-md fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${showNav ? "translate-y-0" : "-translate-y-full"}`}
       >
         <div className="max-w-7xl mx-auto px-4">
+
           <div className="relative flex items-center justify-between py-4 gap-4">
             <div className="flex items-center w-24 md:w-32">
               <Link href="/">
@@ -101,19 +102,14 @@ const Navbar = () => {
               </span>
             </Link>
 
-            <div className="flex items-center gap-2 md:gap-3">
-              <Link
-                href="/wishlist"
-                className="p-2 transition-colors flex items-center justify-center"
-              >
-                <FaHeart
-                  className="text-[#D85A8C]"
-                  style={{ fontSize: "20px" }}
-                />
+            {/* desktop icons */}
+            <div className="hidden md:flex items-center gap-3">
+              <Link href="/wishlist" className="p-2 transition-colors">
+                <FaHeart className="text-xl text-[#D85A8C]" />
               </Link>
               <Link
                 href="/tracking"
-                className="hidden md:block text-stone-800 hover:text-[#EFA7BC] transition-colors text-sm font-medium"
+                className="text-stone-800 hover:text-[#EFA7BC] transition-colors text-sm font-medium"
               >
                 Tracking
               </Link>
@@ -122,13 +118,13 @@ const Navbar = () => {
                 className="text-stone-800 hover:text-[#EFA7BC] transition-colors p-2"
                 aria-label="Search"
               >
-                <FaSearch className="text-lg md:text-xl" />
+                <FaSearch className="text-xl" />
               </button>
               <Link href="/cart" className="relative group">
-                <div className="bg-[#C9D7F2] hover:bg-[#b3c6ef] text-stone-800 px-3 md:px-4 py-2 md:py-2.5 rounded-lg transition-all shadow-md flex items-center gap-1 md:gap-2">
-                  <FaShoppingCart className="text-lg md:text-xl" />
+                <div className="bg-[#C9D7F2] hover:bg-[#b3c6ef] text-stone-800 px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2">
+                  <FaShoppingCart className="text-xl" />
                   {totalItems > 0 && (
-                    <span className="bg-white text-stone-700 text-xs md:text-sm font-bold px-1.5 md:px-2 py-0.5 rounded-full">
+                    <span className="bg-white text-stone-700 text-sm font-bold px-2 py-0.5 rounded-full">
                       {totalItems}
                     </span>
                   )}
@@ -136,12 +132,26 @@ const Navbar = () => {
               </Link>
               <Link
                 href="/admin/login"
-                className="hidden md:block text-stone-800 hover:text-[#EFA7BC] transition-colors p-2"
+                className="text-stone-800 hover:text-[#EFA7BC] transition-colors p-2"
               >
                 <FaUser className="text-xl" />
               </Link>
+            </div>
+
+            {/* mobile icons */}
+            <div className="flex md:hidden items-center gap-1">
+              <Link href="/cart" className="relative group">
+                <div className="bg-[#C9D7F2] text-stone-800 px-3 py-2 rounded-lg shadow-md flex items-center gap-1">
+                  <FaShoppingCart className="text-lg" />
+                  {totalItems > 0 && (
+                    <span className="bg-white text-stone-700 text-xs font-bold px-1.5 py-0.5 rounded-full">
+                      {totalItems}
+                    </span>
+                  )}
+                </div>
+              </Link>
               <button
-                className="md:hidden text-stone-800 p-2"
+                className="text-stone-800 p-2"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label="Toggle menu"
               >
@@ -202,6 +212,7 @@ const Navbar = () => {
               ))}
             </div>
           </div>
+
         </div>
       </nav>
 
@@ -260,7 +271,7 @@ const Navbar = () => {
                     <button
                       onClick={() =>
                         setMobileDropdown(
-                          mobileDropdown === index ? null : index,
+                          mobileDropdown === index ? null : index
                         )
                       }
                       className={`w-full flex items-center justify-between px-4 py-3 text-stone-900 rounded-xl text-base font-semibold uppercase tracking-wide transition-colors ${isActive(item.href) ? "bg-[#F6C9D6]" : "hover:bg-[#F6C9D6]"}`}
@@ -289,11 +300,23 @@ const Navbar = () => {
             ))}
             <div className="border-t border-[#F6C9D6] mt-4 pt-4 flex flex-col gap-1">
               <Link
+                href="/wishlist"
+                className="block px-4 py-3 text-stone-900 hover:bg-[#F6C9D6] rounded-xl text-base font-semibold uppercase tracking-wide transition-colors"
+              >
+                Wishlist
+              </Link>
+              <Link
                 href="/tracking"
                 className="block px-4 py-3 text-stone-900 hover:bg-[#F6C9D6] rounded-xl text-base font-semibold uppercase tracking-wide transition-colors"
               >
                 Tracking
               </Link>
+              <button
+                onClick={() => { setShowSearch(true); setMobileOpen(false); }}
+                className="text-left block px-4 py-3 text-stone-900 hover:bg-[#F6C9D6] rounded-xl text-base font-semibold uppercase tracking-wide transition-colors"
+              >
+                Search
+              </button>
               <Link
                 href="/admin/login"
                 className="block px-4 py-3 text-stone-900 hover:bg-[#F6C9D6] rounded-xl text-base font-semibold uppercase tracking-wide transition-colors"
