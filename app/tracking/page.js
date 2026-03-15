@@ -86,7 +86,7 @@ export default function Tracking() {
             {result.etd && <p><strong>Expected Delivery:</strong> {result.etd}</p>}
           </div>
           {result.tracking_url && (
-            
+            <a
               href={result.tracking_url}
               target="_blank"
               rel="noopener noreferrer"
