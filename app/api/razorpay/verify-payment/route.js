@@ -1,12 +1,71 @@
-import crypto from "crypto";
-import { NextResponse } from "next/server";
-import { createClient } from "@libsql/client";
-import { sendOrderEmail } from "@/lib/email";
+import crypto from 'crypto';
+import { NextResponse } from 'next/server';
+import { createClient } from '@libsql/client';
+import { sendOrderEmail } from '@/lib/email';
 
 const turso = createClient({
   url: process.env.TURSO_DATABASE_URL,
   authToken: process.env.TURSO_AUTH_TOKEN,
 });
+
+async function getShiprocketToken() {
+  const res = await fetch('https://apiv2.shiprocket.in/v1/external/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: process.env.SHIPROCKET_EMAIL,
+      password: process.env.SHIPROCKET_PASSWORD,
+    }),
+  });
+  const data = await res.json();
+  return data.token;
+}
+
+async function createShiprocketOrder(token, orderDetails, items, orderId) {
+  const { name, email, phone, address, city, state, pincode } = orderDetails;
+
+  const orderItems = items.map((item) => ({
+    name: item.name,
+    sku: `SKU-${item.id}`,
+    units: item.quantity,
+    selling_price: item.price,
+  }));
+
+  const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const res = await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      order_id: `ALBELEE-${orderId}`,
+      order_date: new Date().toISOString().split('T')[0],
+      pickup_location: 'Primary',
+      billing_customer_name: name,
+      billing_last_name: '',
+      billing_address: address,
+      billing_city: city || 'N/A',
+      billing_pincode: pincode || '000000',
+      billing_state: state || 'N/A',
+      billing_country: 'India',
+      billing_email: email || '',
+      billing_phone: phone,
+      shipping_is_billing: true,
+      order_items: orderItems,
+      payment_method: 'Prepaid',
+      sub_total: totalAmount,
+      length: 10,
+      breadth: 10,
+      height: 5,
+      weight: 0.5,
+    }),
+  });
+
+  const data = await res.json();
+  return data;
+}
 
 export async function POST(req) {
   try {
@@ -15,60 +74,60 @@ export async function POST(req) {
       razorpay_payment_id,
       razorpay_signature,
       customerDetails,
-      items,
+      items
     } = await req.json();
 
-    const sign = razorpay_order_id + "|" + razorpay_payment_id;
+    const sign = razorpay_order_id + '|' + razorpay_payment_id;
     const expectedSign = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
       .update(sign.toString())
-      .digest("hex");
+      .digest('hex');
+
     if (razorpay_signature === expectedSign) {
-      const totalAmount = items.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0,
-      );
+      const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
       const result = await turso.execute({
         sql: `INSERT INTO orders (user_name, user_email, user_phone, shipping_address, city, state, pincode, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         args: [
           customerDetails.name,
-          customerDetails.email || "",
+          customerDetails.email || '',
           customerDetails.phone,
           customerDetails.address,
-          customerDetails.city || "",
-          customerDetails.state || "",
-          customerDetails.pincode || "",
+          customerDetails.city || '',
+          customerDetails.state || '',
+          customerDetails.pincode || '',
           totalAmount,
-          "completed",
-        ],
+          'completed'
+        ]
       });
 
       const orderId = Number(result.lastInsertRowid);
+
+      try {
+        const token = await getShiprocketToken();
+        const shiprocketOrder = await createShiprocketOrder(token, customerDetails, items, orderId);
+        console.log('Shiprocket order created:', shiprocketOrder);
+      } catch (shipErr) {
+        console.error('Shiprocket error:', shipErr);
+      }
 
       await sendOrderEmail({
         customerDetails,
         items,
         totalAmount,
-        orderId,
+        orderId
       });
 
       return NextResponse.json({
         success: true,
         orderId: orderId,
-        message: "Payment verified successfully",
+        message: 'Payment verified successfully'
       });
     } else {
-      return NextResponse.json(
-        { success: false, message: "Invalid signature" },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, message: 'Invalid signature' }, { status: 400 });
     }
   } catch (error) {
-    console.error("Payment verification failed:", error);
-    return NextResponse.json(
-      { success: false, error: "Verification failed" },
-      { status: 500 },
-    );
+    console.error('Payment verification failed:', error);
+    return NextResponse.json({ success: false, error: 'Verification failed' }, { status: 500 });
   }
 }
