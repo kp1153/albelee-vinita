@@ -67,8 +67,7 @@ export default function Tracking() {
           <button
             onClick={handleTrack}
             disabled={loading}
-            className="w-full bg-[#F6C9D6] hover:bg-[#EFA7BC] text-stone-800 font-semibold px-6 py-3 rounded-lg transition disabled:opacity-50"
-          >
+            className="w-full bg-[#F6C9D6] hover:bg-[#EFA7BC] text-stone-800 font-semibold px-6 py-3 rounded-lg transition disabled:opacity-50">
             {loading ? 'Tracking...' : 'Track Order'}
           </button>
           {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -91,8 +90,7 @@ export default function Tracking() {
               href={result.tracking_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-block bg-[#F6C9D6] hover:bg-[#EFA7BC] text-stone-800 font-semibold px-6 py-2 rounded-lg transition"
-            >
+              className="mt-4 inline-block bg-[#F6C9D6] hover:bg-[#EFA7BC] text-stone-800 font-semibold px-6 py-2 rounded-lg transition">
               View Full Tracking
             </a>
           )}
