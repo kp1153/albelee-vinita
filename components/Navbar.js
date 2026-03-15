@@ -76,8 +76,56 @@ const Navbar = () => {
       >
         <div className="max-w-7xl mx-auto px-4">
 
-          <div className="relative flex items-center justify-between py-4 gap-4">
-            <div className="flex items-center w-24 md:w-32">
+          {/* ── MOBILE HEADER ── */}
+          <div className="flex md:hidden items-center justify-between py-3">
+            <div className="flex items-center gap-2">
+              <button
+                className="text-stone-800 p-1"
+                onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label="Toggle menu"
+              >
+                {mobileOpen ? (
+                  <FaTimes className="text-xl" />
+                ) : (
+                  <FaBars className="text-xl" />
+                )}
+              </button>
+              <Link href="/">
+                <Image
+                  src="/logo.jpeg"
+                  alt="Albelee"
+                  width={80}
+                  height={50}
+                  className="object-contain"
+                  priority
+                />
+              </Link>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowSearch(!showSearch)}
+                className="text-stone-800 p-1"
+                aria-label="Search"
+              >
+                <FaSearch className="text-xl" />
+              </button>
+              <Link href="/wishlist" className="p-1">
+                <FaHeart className="text-xl text-[#D85A8C]" />
+              </Link>
+              <Link href="/cart" className="relative p-1">
+                <FaShoppingCart className="text-xl text-stone-800" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#D85A8C] text-white text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
+            </div>
+          </div>
+
+          {/* ── DESKTOP HEADER ── */}
+          <div className="hidden md:flex relative items-center justify-between py-5 gap-4">
+            <div className="flex items-center w-32">
               <Link href="/">
                 <Image
                   src="/logo.jpeg"
@@ -89,20 +137,18 @@ const Navbar = () => {
                 />
               </Link>
             </div>
-
             <Link
               href="/"
               className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center"
             >
-              <span className="font-serif text-2xl md:text-3xl font-bold text-stone-900 tracking-widest">
+              <span className="font-serif text-3xl font-bold text-stone-900 tracking-widest">
                 ALBELEE
               </span>
               <span className="text-xs text-stone-500 tracking-widest font-medium">
                 अलबेली
               </span>
             </Link>
-
-            <div className="hidden md:flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <Link href="/wishlist" className="p-2 transition-colors">
                 <FaHeart className="text-xl text-[#D85A8C]" />
               </Link>
@@ -136,35 +182,9 @@ const Navbar = () => {
                 <FaUser className="text-xl" />
               </Link>
             </div>
-
-            <div className="flex md:hidden items-center gap-1">
-              <Link href="/wishlist" className="p-2 transition-colors">
-                <FaHeart className="text-xl text-[#D85A8C]" />
-              </Link>
-              <Link href="/cart" className="relative group">
-                <div className="bg-[#C9D7F2] text-stone-800 px-3 py-2 rounded-lg shadow-md flex items-center gap-1">
-                  <FaShoppingCart className="text-lg" />
-                  {totalItems > 0 && (
-                    <span className="bg-white text-stone-700 text-xs font-bold px-1.5 py-0.5 rounded-full">
-                      {totalItems}
-                    </span>
-                  )}
-                </div>
-              </Link>
-              <button
-                className="text-stone-800 p-2"
-                onClick={() => setMobileOpen(!mobileOpen)}
-                aria-label="Toggle menu"
-              >
-                {mobileOpen ? (
-                  <FaTimes className="text-xl" />
-                ) : (
-                  <FaBars className="text-xl" />
-                )}
-              </button>
-            </div>
           </div>
 
+          {/* ── SEARCH BAR ── */}
           {showSearch && (
             <div className="pb-3">
               <form onSubmit={handleSearch} className="relative">
@@ -186,6 +206,7 @@ const Navbar = () => {
             </div>
           )}
 
+          {/* ── DESKTOP NAV LINKS ── */}
           <div className="hidden md:block pb-2">
             <div className="flex items-center justify-between w-full">
               {navItems.map((item, index) => (
@@ -193,7 +214,7 @@ const Navbar = () => {
                   {!item.children ? (
                     <Link
                       href={item.href}
-                      className={`block px-3 py-2 text-stone-900 hover:text-stone-900 hover:bg-[#F6C9D6] rounded-lg transition-colors whitespace-nowrap text-sm font-semibold uppercase tracking-wide ${isActive(item.href) ? "text-stone-900 bg-[#F6C9D6]" : ""}`}
+                      className={`block px-3 py-2 text-stone-900 hover:bg-[#F6C9D6] rounded-lg transition-colors whitespace-nowrap text-sm font-semibold uppercase tracking-wide ${isActive(item.href) ? "bg-[#F6C9D6]" : ""}`}
                     >
                       {item.name}
                     </Link>
@@ -201,7 +222,7 @@ const Navbar = () => {
                     <button
                       ref={(el) => (buttonRefs.current[index] = el)}
                       onClick={() => handleDropdownClick(index)}
-                      className={`px-3 py-2 text-stone-900 hover:text-stone-900 hover:bg-[#F6C9D6] rounded-lg transition-colors whitespace-nowrap text-sm font-semibold uppercase tracking-wide flex items-center gap-1 ${isActive(item.href) ? "text-stone-900 bg-[#F6C9D6]" : ""}`}
+                      className={`px-3 py-2 text-stone-900 hover:bg-[#F6C9D6] rounded-lg transition-colors whitespace-nowrap text-sm font-semibold uppercase tracking-wide flex items-center gap-1 ${isActive(item.href) ? "bg-[#F6C9D6]" : ""}`}
                     >
                       {item.name}
                       <span className="text-xs">
@@ -217,8 +238,9 @@ const Navbar = () => {
         </div>
       </nav>
 
-      <div className="h-[108px] md:h-[120px]" />
+      <div className="h-[64px] md:h-[120px]" />
 
+      {/* ── DESKTOP DROPDOWN ── */}
       {activeDropdown !== null && navItems[activeDropdown]?.children && (
         <>
           <div
@@ -244,6 +266,7 @@ const Navbar = () => {
         </>
       )}
 
+      {/* ── MOBILE MENU ── */}
       {mobileOpen && (
         <div className="fixed top-0 left-0 right-0 bottom-0 z-[200] bg-[#FFF3F6] overflow-y-auto md:hidden">
           <div className="flex items-center justify-between px-4 py-4 border-b border-[#F6C9D6]">
@@ -301,23 +324,11 @@ const Navbar = () => {
             ))}
             <div className="border-t border-[#F6C9D6] mt-4 pt-4 flex flex-col gap-1">
               <Link
-                href="/wishlist"
-                className="block px-4 py-3 text-stone-900 hover:bg-[#F6C9D6] rounded-xl text-base font-semibold uppercase tracking-wide transition-colors"
-              >
-                Wishlist
-              </Link>
-              <Link
                 href="/tracking"
                 className="block px-4 py-3 text-stone-900 hover:bg-[#F6C9D6] rounded-xl text-base font-semibold uppercase tracking-wide transition-colors"
               >
                 Tracking
               </Link>
-              <button
-                onClick={() => { setShowSearch(true); setMobileOpen(false); }}
-                className="text-left block px-4 py-3 text-stone-900 hover:bg-[#F6C9D6] rounded-xl text-base font-semibold uppercase tracking-wide transition-colors"
-              >
-                Search
-              </button>
               <Link
                 href="/admin/login"
                 className="block px-4 py-3 text-stone-900 hover:bg-[#F6C9D6] rounded-xl text-base font-semibold uppercase tracking-wide transition-colors"
