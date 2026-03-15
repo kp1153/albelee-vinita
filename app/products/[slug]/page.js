@@ -13,12 +13,20 @@ export default function ProductDetail() {
   const { addToCart } = useCart();
 
   useEffect(() => {
+    if (!slug) return;
     fetch(`/api/products/${slug}`)
       .then(r => r.json())
-      .then(data => { setProduct(data); setLoading(false); });
+      .then(data => {
+        if (data && !data.error) {
+          setProduct(data);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [slug]);
 
   const handleAddToCart = () => {
+    if (!product) return;
     addToCart({
       id: product.id,
       name: product.name,
@@ -38,7 +46,7 @@ export default function ProductDetail() {
     );
   }
 
-  if (!product || product.error) {
+  if (!product) {
     return (
       <main className="max-w-7xl mx-auto px-4 py-16 text-center">
         <p className="text-stone-500 mb-4">Product not found.</p>
