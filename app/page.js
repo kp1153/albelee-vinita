@@ -36,24 +36,19 @@ export default async function Home() {
     <main>
 
       <section className="w-full h-[600px] flex">
-        <div className="w-1/2 flex flex-col justify-center px-16" style={{background: '#F5D1B5'}}>
-          <h1 className="font-serif text-5xl text-stone-800 font-bold leading-tight drop-shadow">
+        <div className="w-1/2 flex flex-col justify-center px-16 gap-6" style={{background: '#C4918A'}}>
+          <h1 className="font-serif text-5xl text-white font-bold leading-tight drop-shadow">
             A New Expression,<br />Every Day.
           </h1>
-        </div>
-        <div className="w-1/2 relative">
-          <Image src="/hero.png" alt="Albelee Jewels" fill className="object-cover object-center" priority />
-        </div>
-      </section>
-
-      <section className="py-16 text-center" style={{background: '#F5D1B5'}}>
-        <div className="max-w-2xl mx-auto px-4">
-          <p className="font-serif text-xl text-stone-800 leading-relaxed drop-shadow">
+          <p className="font-serif text-lg text-white leading-relaxed drop-shadow">
             तू अब निकल, चल बदल, रोज़ नया रूप धर,<br />
             बन सँवर, कर गुज़र नित नई अठखेली...<br />
             कि जान ले अब हर कोई,<br />
             तू है कोई अलबेली
           </p>
+        </div>
+        <div className="w-1/2 relative">
+          <Image src="/hero.png" alt="Albelee Jewels" fill className="object-cover object-center" priority />
         </div>
       </section>
 
