@@ -182,7 +182,6 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    </div>
+      </div>
   );
 }
