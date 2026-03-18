@@ -15,13 +15,15 @@ async function getCategoryBySlug(slug) {
 async function getProductsByCategory(categoryId) {
   const result = await client.execute({
     sql: `
-      SELECT p.*, pi.image_url as image
+      SELECT DISTINCT p.*, pi.image_url as image
       FROM products p
       LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.is_primary = 1
-      WHERE p.category_id = ?
+      LEFT JOIN product_categories pc ON pc.product_id = p.id
+      WHERE (p.category_id = ? OR pc.category_id = ?)
+        AND p.is_active = 1
       ORDER BY p.created_at DESC
     `,
-    args: [categoryId],
+    args: [categoryId, categoryId],
   });
   return result.rows;
 }
