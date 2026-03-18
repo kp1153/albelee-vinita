@@ -55,7 +55,7 @@ export default function CheckoutPage() {
         currency: data.currency,
         name: "Albelee",
         description: "Jewellery Purchase",
-        image: "/logo.JPEG",
+        image: "/logo.jpeg",
         order_id: data.id,
         method: {
           netbanking: true,
