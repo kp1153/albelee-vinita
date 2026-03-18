@@ -7,12 +7,16 @@ export default function EditProduct() {
   const router = useRouter();
   const { id } = useParams();
   const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const [form, setForm] = useState({ name: '', slug: '', description: '', price: '', category_id: '', stock: '', image_url: '' });
+  const [form, setForm] = useState({ name: '', slug: '', description: '', price: '', category_id: '', stock: '', image_url: '', db_reference: '' });
 
   useEffect(() => {
     fetch('/api/admin/categories').then(r => r.json()).then(setCategories);
-    fetch(`/api/admin/products/${id}`).then(r => r.json()).then(setForm);
+    fetch(`/api/admin/products/${id}`).then(r => r.json()).then(data => {
+      setForm(data);
+      setSelectedCategories((data.category_ids || []).map(Number));
+    });
   }, [id]);
 
   const handleImageUpload = async (e) => {
@@ -31,7 +35,11 @@ export default function EditProduct() {
     await fetch(`/api/admin/products/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+      body: JSON.stringify({
+        ...form,
+        category_id: selectedCategories[0] || null,
+        category_ids: selectedCategories,
+      }),
     });
     router.push('/admin/products');
   };
@@ -81,12 +89,37 @@ export default function EditProduct() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-          <select value={form.category_id || ''} onChange={e => setForm({ ...form, category_id: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400">
-            <option value="">Select category</option>
-            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Categories (एक से अधिक चुन सकते हैं)</label>
+          <div className="border border-gray-300 rounded-lg p-3 grid grid-cols-2 gap-2">
+            {categories.map(c => (
+              <label key={c.id} className="flex items-center gap-2 cursor-pointer hover:bg-amber-50 px-2 py-1 rounded">
+                <input
+                  type="checkbox"
+                  checked={selectedCategories.includes(Number(c.id))}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedCategories(prev => [...prev, Number(c.id)]);
+                    } else {
+                      setSelectedCategories(prev => prev.filter(id => id !== Number(c.id)));
+                    }
+                  }}
+                  className="accent-amber-500"
+                />
+                <span className="text-sm text-gray-700">{c.name}</span>
+              </label>
+            ))}
+          </div>
+          {selectedCategories.length > 0 && (
+            <p className="text-xs text-amber-600 mt-1">✓ {selectedCategories.length} category चुनी गई</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">DB Reference / SKU Code</label>
+          <input value={form.db_reference || ''} onChange={e => setForm({ ...form, db_reference: e.target.value })}
+            placeholder="अपना internal code / SKU यहाँ डालें"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+          <p className="text-xs text-gray-400 mt-1">यह code सिर्फ आपके reference के लिए है — customer को नहीं दिखेगा</p>
         </div>
 
         <button onClick={handleSubmit} className="bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600">Update Product</button>

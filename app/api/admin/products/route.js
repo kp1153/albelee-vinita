@@ -15,17 +15,32 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    const { name, slug, description, price, mrp, category_id, stock, image_url } = await req.json();
+    const { name, slug, description, price, mrp, category_id, stock, image_url, category_ids, db_reference } = await req.json();
+
     const result = await client.execute({
-      sql: `INSERT INTO products (name, slug, description, price, mrp, category_id, stock) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      args: [name, slug, description, price, mrp || price, category_id, stock],
+      sql: `INSERT INTO products (name, slug, description, price, mrp, category_id, stock, db_reference) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      args: [name, slug, description, price, mrp || price, category_id || null, stock, db_reference || null],
     });
+
+    const productId = result.lastInsertRowid;
+
+    // Multiple categories save करो
+    if (category_ids && category_ids.length > 0) {
+      for (const catId of category_ids) {
+        await client.execute({
+          sql: `INSERT OR IGNORE INTO product_categories (product_id, category_id) VALUES (?, ?)`,
+          args: [productId, catId],
+        });
+      }
+    }
+
     if (image_url) {
       await client.execute({
         sql: `INSERT INTO product_images (product_id, image_url, is_primary) VALUES (?, ?, 1)`,
-        args: [result.lastInsertRowid, image_url],
+        args: [productId, image_url],
       });
     }
+
     return Response.json({ success: true });
   } catch (e) {
     return Response.json({ error: e.message }, { status: 500 });
