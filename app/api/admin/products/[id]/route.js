@@ -5,7 +5,6 @@ export async function GET(req, { params }) {
   const result = await client.execute({ sql: `SELECT * FROM products WHERE id = ?`, args: [id] });
   const product = result.rows[0];
 
-  // इस product की सभी categories लाओ
   const catResult = await client.execute({
     sql: `SELECT category_id FROM product_categories WHERE product_id = ?`,
     args: [id],
@@ -17,14 +16,13 @@ export async function GET(req, { params }) {
 
 export async function PUT(req, { params }) {
   const { id } = await params;
-  const { name, slug, description, price, mrp, category_id, stock, category_ids, db_reference } = await req.json();
+  const { name, slug, description, price, mrp, category_id, stock, category_ids, db_reference, image_url, image2, image3, image4 } = await req.json();
 
   await client.execute({
-    sql: `UPDATE products SET name=?, slug=?, description=?, price=?, mrp=?, category_id=?, stock=?, db_reference=? WHERE id=?`,
-    args: [name, slug, description, price, mrp, category_id || null, stock, db_reference || null, id],
+    sql: `UPDATE products SET name=?, slug=?, description=?, price=?, mrp=?, category_id=?, stock=?, db_reference=?, image=?, image2=?, image3=?, image4=? WHERE id=?`,
+    args: [name, slug, description, price, mrp, category_id || null, stock, db_reference || null, image_url || null, image2 || null, image3 || null, image4 || null, id],
   });
 
-  // पुरानी categories हटाओ, नई डालो
   await client.execute({ sql: `DELETE FROM product_categories WHERE product_id = ?`, args: [id] });
   if (category_ids && category_ids.length > 0) {
     for (const catId of category_ids) {
