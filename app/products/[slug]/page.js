@@ -58,17 +58,23 @@ export default function ProductDetail() {
     setWishlisted(!wishlisted);
   };
 
-  const handlePincodeCheck = () => {
+  const handlePincodeCheck = async () => {
     if (pincode.length !== 6 || isNaN(pincode)) {
       setDeliveryMsg("Please enter a valid 6-digit pincode.");
       return;
     }
-    const today = new Date();
-    today.setDate(today.getDate() + 4);
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const deliveryDate = `${days[today.getDay()]}, ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
-    setDeliveryMsg(`Get it by ${deliveryDate}`);
+    setDeliveryMsg("Checking...");
+    try {
+      const res = await fetch(`/api/pincode-check?pincode=${pincode}`);
+      const data = await res.json();
+      if (data.serviceable) {
+        setDeliveryMsg(`Get it by ${data.delivery_date}${data.cod ? " · COD Available" : ""}`);
+      } else {
+        setDeliveryMsg("Delivery not available at this pincode.");
+      }
+    } catch {
+      setDeliveryMsg("Could not check. Please try again.");
+    }
   };
 
   const images = product
