@@ -42,7 +42,7 @@ export default async function Home() {
           </h1>
           <p className="font-serif text-base md:text-lg text-white leading-relaxed drop-shadow">
             तू अब निकल, चल बदल, रोज़ नया रूप धर,<br />
-            बन सँवर, कर गुज़र नित नई अठखेली...<br />
+            बन संवर, कर गुज़र नित नई अठखेली...<br />
             कि जान ले अब हर कोई,<br />
             तू है कोई अलबेली
           </p>
