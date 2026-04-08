@@ -5,7 +5,9 @@ export async function GET(req, { params }) {
   try {
     const result = await client.execute({
       sql: `
-        SELECT p.*, pi.image_url as image
+        SELECT p.id, p.name, p.slug, p.description, p.price, p.mrp, p.stock,
+               p.category_id, p.db_reference, p.created_at,
+               pi.image_url as image
         FROM products p
         LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.is_primary = 1
         WHERE p.slug = ?
