@@ -19,28 +19,33 @@ export default function CheckoutPage() {
     pincode: "",
   });
 
-  const DELIVERY_CHARGE = 0;
+  const DELIVERY_CHARGE = 60;
   const DISCOUNT_THRESHOLD = 1000;
   const FLAT_DISCOUNT = 51;
 
   const totalMRP = cartItems.reduce(
     (sum, item) => sum + (item.mrp || item.price) * item.quantity,
-    0
+    0,
   );
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
   const mrpDiscount = totalMRP - totalPrice;
   const flatDiscount = totalPrice >= DISCOUNT_THRESHOLD ? FLAT_DISCOUNT : 0;
-  const amountToPay = totalPrice - flatDiscount;
+  const amountToPay = totalPrice - flatDiscount + DELIVERY_CHARGE;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleReview = () => {
-    if (!formData.name || !formData.phone || !formData.address || !formData.email) {
+    if (
+      !formData.name ||
+      !formData.phone ||
+      !formData.address ||
+      !formData.email
+    ) {
       alert("Please fill all required fields");
       return;
     }
@@ -251,11 +256,14 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between text-gray-500">
                   <span>Delivery Charges</span>
-                  <span className="text-green-600 font-medium">FREE</span>
+                  <span className="font-medium">₹{DELIVERY_CHARGE}</span>
                 </div>
                 {mrpDiscount > 0 && (
                   <div className="flex justify-between text-green-600 font-medium">
-                    <span>Discount ({Math.round((mrpDiscount / totalMRP) * 100)}% off)</span>
+                    <span>
+                      Discount ({Math.round((mrpDiscount / totalMRP) * 100)}%
+                      off)
+                    </span>
                     <span>- ₹{mrpDiscount}</span>
                   </div>
                 )}
@@ -285,9 +293,7 @@ export default function CheckoutPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full border border-[#F6C9D6] max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-stone-800">
-                Review Order
-              </h2>
+              <h2 className="text-xl font-bold text-stone-800">Review Order</h2>
               <button
                 onClick={() => setShowConfirm(false)}
                 className="text-gray-400 hover:text-gray-600 text-sm underline"
@@ -302,7 +308,10 @@ export default function CheckoutPage() {
               </h3>
               <div className="space-y-2">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center text-sm">
+                  <div
+                    key={item.id}
+                    className="flex justify-between items-center text-sm"
+                  >
                     <span className="text-gray-700">
                       {item.name} x {item.quantity}
                     </span>
@@ -333,7 +342,9 @@ export default function CheckoutPage() {
               </div>
               {mrpDiscount > 0 && (
                 <div className="flex justify-between text-green-600 font-medium">
-                  <span>Discount ({Math.round((mrpDiscount / totalMRP) * 100)}% off)</span>
+                  <span>
+                    Discount ({Math.round((mrpDiscount / totalMRP) * 100)}% off)
+                  </span>
                   <span>- ₹{mrpDiscount}</span>
                 </div>
               )}
