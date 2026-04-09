@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import client from '@/lib/db';
 
 export async function GET(req) {
@@ -51,8 +50,13 @@ export async function GET(req) {
     isAdmin,
   });
 
-  const cookieStore = await cookies();
-  cookieStore.set('session', sessionData, {
+  const returnTo = state && state.startsWith('/') ? state : '/';
+  const redirectUrl = isAdmin
+    ? 'https://www.shop-at-albelee.com/admin'
+    : `https://www.shop-at-albelee.com${returnTo}`;
+
+  const response = NextResponse.redirect(redirectUrl);
+  response.cookies.set('session', sessionData, {
     httpOnly: true,
     secure: true,
     sameSite: 'lax',
@@ -60,6 +64,5 @@ export async function GET(req) {
     path: '/',
   });
 
-  const returnTo = state && state.startsWith('/') ? state : '/';
-  return NextResponse.redirect(`https://www.shop-at-albelee.com${returnTo}`);
+  return response;
 }
