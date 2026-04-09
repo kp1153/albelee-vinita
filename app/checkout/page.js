@@ -25,11 +25,11 @@ export default function CheckoutPage() {
 
   const totalMRP = cartItems.reduce(
     (sum, item) => sum + (item.mrp || item.price) * item.quantity,
-    0
+    0,
   );
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
   const mrpDiscount = totalMRP - totalPrice;
   const flatDiscount = totalPrice >= DISCOUNT_THRESHOLD ? FLAT_DISCOUNT : 0;
@@ -40,7 +40,12 @@ export default function CheckoutPage() {
   };
 
   const handleReview = () => {
-    if (!formData.name || !formData.phone || !formData.address) {
+    if (
+      !formData.name ||
+      !formData.phone ||
+      !formData.address ||
+      !formData.email
+    ) {
       alert("Please fill all required fields");
       return;
     }
@@ -135,7 +140,7 @@ export default function CheckoutPage() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
-                    Full Name *
+                    Email *
                   </label>
                   <input
                     type="text"
@@ -152,11 +157,11 @@ export default function CheckoutPage() {
                   </label>
                   <input
                     type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F6C9D6]"
-                  />
+name="email"
+value={formData.email}
+onChange={handleChange}
+className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F6C9D6]"
+required
                 </div>
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
@@ -254,7 +259,10 @@ export default function CheckoutPage() {
                 </div>
                 {mrpDiscount > 0 && (
                   <div className="flex justify-between text-green-600 font-medium">
-                    <span>Discount ({Math.round((mrpDiscount / totalMRP) * 100)}% off)</span>
+                    <span>
+                      Discount ({Math.round((mrpDiscount / totalMRP) * 100)}%
+                      off)
+                    </span>
                     <span>- ₹{mrpDiscount}</span>
                   </div>
                 )}
@@ -284,9 +292,7 @@ export default function CheckoutPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full border border-[#F6C9D6] max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-stone-800">
-                Review Order
-              </h2>
+              <h2 className="text-xl font-bold text-stone-800">Review Order</h2>
               <button
                 onClick={() => setShowConfirm(false)}
                 className="text-gray-400 hover:text-gray-600 text-sm underline"
@@ -301,7 +307,10 @@ export default function CheckoutPage() {
               </h3>
               <div className="space-y-2">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center text-sm">
+                  <div
+                    key={item.id}
+                    className="flex justify-between items-center text-sm"
+                  >
                     <span className="text-gray-700">
                       {item.name} x {item.quantity}
                     </span>
@@ -332,7 +341,9 @@ export default function CheckoutPage() {
               </div>
               {mrpDiscount > 0 && (
                 <div className="flex justify-between text-green-600 font-medium">
-                  <span>Discount ({Math.round((mrpDiscount / totalMRP) * 100)}% off)</span>
+                  <span>
+                    Discount ({Math.round((mrpDiscount / totalMRP) * 100)}% off)
+                  </span>
                   <span>- ₹{mrpDiscount}</span>
                 </div>
               )}
