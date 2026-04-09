@@ -1,5 +1,5 @@
+import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import client from '@/lib/db';
 
 export async function GET(req) {
@@ -8,7 +8,7 @@ export async function GET(req) {
   const state = searchParams.get('state');
 
   if (!code) {
-    redirect('/login?error=no_code');
+    return NextResponse.redirect('https://www.shop-at-albelee.com/login?error=no_code');
   }
 
   const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
@@ -25,7 +25,7 @@ export async function GET(req) {
 
   const tokens = await tokenRes.json();
   if (!tokens.access_token) {
-    redirect('/login?error=token_failed');
+    return NextResponse.redirect('https://www.shop-at-albelee.com/login?error=token_failed');
   }
 
   const userRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
@@ -60,10 +60,6 @@ export async function GET(req) {
     path: '/',
   });
 
-  if (isAdmin) {
-    redirect('/admin');
-  }
-
-  const returnTo = state || '/';
-  redirect(returnTo);
+  const returnTo = state && state.startsWith('/') ? state : '/';
+  return NextResponse.redirect(`https://www.shop-at-albelee.com${returnTo}`);
 }
