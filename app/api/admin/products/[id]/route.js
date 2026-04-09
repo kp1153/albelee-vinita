@@ -90,17 +90,14 @@ export async function PUT(req, { params }) {
 
 export async function DELETE(req, { params }) {
   const { id } = await params;
-  await client.execute({
-    sql: `DELETE FROM product_images WHERE product_id = ?`,
-    args: [id],
-  });
-  await client.execute({
-    sql: `DELETE FROM product_categories WHERE product_id = ?`,
-    args: [id],
-  });
-  await client.execute({
-    sql: `DELETE FROM products WHERE id = ?`,
-    args: [id],
-  });
-  return Response.json({ success: true });
+  try {
+    await client.execute({ sql: `DELETE FROM wishlist WHERE product_id = ?`, args: [id] });
+    await client.execute({ sql: `DELETE FROM order_items WHERE product_id = ?`, args: [id] });
+    await client.execute({ sql: `DELETE FROM product_images WHERE product_id = ?`, args: [id] });
+    await client.execute({ sql: `DELETE FROM product_categories WHERE product_id = ?`, args: [id] });
+    await client.execute({ sql: `DELETE FROM products WHERE id = ?`, args: [id] });
+    return Response.json({ success: true });
+  } catch (e) {
+    return Response.json({ success: false, error: e.message }, { status: 500 });
+  }
 }
