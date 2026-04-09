@@ -32,7 +32,20 @@ export default function EditProduct() {
     fetch(`/api/admin/products/${id}`)
       .then((r) => r.json())
       .then((data) => {
-        setForm(data);
+        setForm({
+          name: data.name || "",
+          slug: data.slug || "",
+          description: data.description || "",
+          price: data.price || "",
+          mrp: data.mrp || "",
+          category_id: data.category_id || "",
+          stock: data.stock || "",
+          image_url: data.image || "",
+          image2: data.image2 || "",
+          image3: data.image3 || "",
+          image4: data.image4 || "",
+          db_reference: data.db_reference || "",
+        });
         setSelectedCategories((data.category_ids || []).map(Number));
       });
   }, [id]);
