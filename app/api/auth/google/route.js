@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { NextResponse } from 'next/server';
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
@@ -12,5 +12,5 @@ export async function GET(req) {
     state: returnTo,
   });
 
-  redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
+  return NextResponse.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
 }
