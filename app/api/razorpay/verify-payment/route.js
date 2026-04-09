@@ -31,6 +31,7 @@ async function createShiprocketOrder(token, orderDetails, items, orderId) {
     selling_price: item.price,
   }));
 
+ console.log('customerDetails:', JSON.stringify(customerDetails));
   const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const res = await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
