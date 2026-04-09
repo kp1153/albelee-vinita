@@ -6,7 +6,7 @@ export async function GET(req) {
 
   const params = new URLSearchParams({
     client_id: process.env.GOOGLE_CLIENT_ID,
-    redirect_uri: `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/google`,
+    redirect_uri: 'https://www.shop-at-albelee.com/api/auth/callback/google',
     response_type: 'code',
     scope: 'openid email profile',
     state: returnTo,

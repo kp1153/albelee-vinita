@@ -18,7 +18,7 @@ export async function GET(req) {
       code,
       client_id: process.env.GOOGLE_CLIENT_ID,
       client_secret: process.env.GOOGLE_CLIENT_SECRET,
-      redirect_uri: `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/google`,
+      redirect_uri: 'https://www.shop-at-albelee.com/api/auth/callback/google',
       grant_type: 'authorization_code',
     }),
   });
