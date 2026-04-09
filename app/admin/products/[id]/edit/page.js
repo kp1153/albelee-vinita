@@ -36,6 +36,19 @@ export default function EditProduct() {
       });
   }, [id]);
 
+  const generateSlug = (name) =>
+    name
+      .trim()
+      .toLowerCase()
+      .replace(/[\s]+/g, "-")
+      .replace(/[^\w\u0900-\u097F-]/g, "")
+      .replace(/--+/g, "-");
+
+  const handleNameChange = (e) => {
+    const name = e.target.value;
+    setForm((f) => ({ ...f, name, slug: generateSlug(name) }));
+  };
+
   const handleImageUpload = async (e, field) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -93,7 +106,7 @@ export default function EditProduct() {
           <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
           <input
             value={form.name || ""}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            onChange={handleNameChange}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
           />
         </div>
