@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import RichTextEditor from "@/components/RichTextEditor";
+import { slugify } from "transliteration";
 
 export default function EditProduct() {
   const router = useRouter();
@@ -37,12 +38,7 @@ export default function EditProduct() {
   }, [id]);
 
   const generateSlug = (name) =>
-    name
-      .trim()
-      .toLowerCase()
-      .replace(/[\s]+/g, "-")
-      .replace(/[^\w\u0900-\u097F-]/g, "")
-      .replace(/--+/g, "-");
+    slugify(name, { separator: "-", lowercase: true });
 
   const handleNameChange = (e) => {
     const name = e.target.value;
